@@ -1,9 +1,11 @@
 package uk.co.zenitech.intern.controller;
 
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.Song;
+import uk.co.zenitech.intern.service.SongService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,10 +15,17 @@ import java.util.List;
 @Api("api/songs")
 public class SongController {
 
+    private SongService songService;
+
+    @Autowired
+    public SongController(SongService songService) {
+        this.songService = songService;
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Song> getAllSongs() {
-        return Arrays.asList(new Song(0L, "string", "string", "string"));
+    public List<Song> getAllSongs(@RequestParam(name = "song", required = false) String song) {
+        return songService.getSongsByName(song);
     }
 
     @GetMapping(value = "/{songId}")
