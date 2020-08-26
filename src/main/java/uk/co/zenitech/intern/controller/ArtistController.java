@@ -4,16 +4,16 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import uk.co.zenitech.intern.ArtistApi;
 import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.service.ArtistService;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/artist")
 @Api("api/artist")
-public class ArtistController {
+public class ArtistController implements ArtistApi {
 
     private ArtistService artistService;
 
@@ -25,7 +25,7 @@ public class ArtistController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Artist> getAllArtist(@RequestParam (name = "artist", required = false) String artist) {
-        return artistService.getArtistByName(artist);
+        return artistService.getArtists(artist);
     }
 
     @GetMapping(value = "/{artistId}")

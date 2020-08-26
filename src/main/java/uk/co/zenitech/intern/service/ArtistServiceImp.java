@@ -19,12 +19,15 @@ public class ArtistServiceImp implements ArtistService {
     }
 
     @Override
-    public List<Artist> getArtistByName(String artist) {
-        if (artist == null) {
-            return responseParser.parseArtists();
+    public List<Artist> getArtists(String artistName) {
+        if (artistName == null) {
+            return responseParser.parse(Artist.class, "track");
         } else {
-            return responseParser.parseArtists().stream()
-                    .filter(jsonartist -> jsonartist.getArtistName().toLowerCase().contains(artist.toLowerCase()))
+            return responseParser.parse(Artist.class, "track").stream()
+                    .filter(jsonartist -> jsonartist.getArtistName()
+                            .toLowerCase()
+                            .trim()
+                            .contains(artistName.toLowerCase().trim()))
                     .collect(Collectors.toList());
         }
     }

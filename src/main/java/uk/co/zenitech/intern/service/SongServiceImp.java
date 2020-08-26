@@ -19,12 +19,15 @@ public class SongServiceImp implements SongService {
     }
 
     @Override
-    public List<Song> getSongsByName(String song) {
-        if (song == null) {
-            return responseParser.parseSongs();
+    public List<Song> getSongs(String songName) {
+        if (songName == null) {
+            return responseParser.parse(Song.class, "track");
         } else {
-            return responseParser.parseSongs().stream()
-                    .filter(jsonsong -> jsonsong.getArtistName().toLowerCase().contains(song.toLowerCase()))
+            return responseParser.parse(Song.class, "track").stream()
+                    .filter(jsonsong -> jsonsong.getArtistName()
+                            .toLowerCase()
+                            .trim()
+                            .contains(songName.toLowerCase().trim()))
                     .collect(Collectors.toList());
         }
     }

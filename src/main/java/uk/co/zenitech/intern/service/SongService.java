@@ -5,5 +5,5 @@ import uk.co.zenitech.intern.entity.Song;
 import java.util.List;
 
 public interface SongService {
-    List<Song> getSongsByName(String song);
+    List<Song> getSongs(String song);
 }

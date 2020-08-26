@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.service.SongService;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -25,7 +24,7 @@ public class SongController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Song> getAllSongs(@RequestParam(name = "song", required = false) String song) {
-        return songService.getSongsByName(song);
+        return songService.getSongs(song);
     }
 
     @GetMapping(value = "/{songId}")
