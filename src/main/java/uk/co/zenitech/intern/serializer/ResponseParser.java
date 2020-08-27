@@ -4,13 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.swagger.models.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import springfox.documentation.spring.web.json.Json;
-import uk.co.zenitech.intern.entity.Artist;
-import uk.co.zenitech.intern.entity.Song;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,17 +18,17 @@ import java.util.Optional;
 @Component
 public class ResponseParser {
     private final ObjectMapper objectMapper = new ObjectMapper();
+    Logger logger = LoggerFactory.getLogger(ResponseParser.class);
 
-    public <T> List<T> parse(Class<T> clazz, String wrapperType) {
+    public <T> List<T> parse(Class<T> clazz, String wrapperType, ResponseEntity<String> responseEntity) {
         List<T> list = new ArrayList<>();
-        Optional<JsonNode> results = getResults();
-        results.ifPresent(node -> node.forEach(entry -> {
+        getResults(responseEntity).ifPresent(node -> node.forEach(entry -> {
                     if (entry.get("wrapperType").toString().equals(wrapperType)) {
                         try {
                             T object = objectMapper.treeToValue(entry, clazz);
                             list.add(object);
                         } catch (JsonProcessingException e) {
-                            e.printStackTrace();
+                            logger.error("Error parsing json: {}. ", e.getMessage());
                         }
                     }
                 }
@@ -36,10 +36,11 @@ public class ResponseParser {
         return list;
     }
 
-    private Optional<JsonNode> getResults() {
+    private Optional<JsonNode> getResults(ResponseEntity<String> responseEntity) {
         try {
-            return Optional.ofNullable(objectMapper.readTree(new File("src/main/resources/response.json")).get("results"));
-        } catch (IOException e) {
+            return Optional.ofNullable(objectMapper.readTree(responseEntity.getBody()).get("results"));
+        } catch (JsonProcessingException e) {
+            logger.error("Error parsing json: {}. ", e.getMessage());
             return Optional.empty();
         }
     }

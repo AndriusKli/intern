@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ArtistService {
     List<Artist> getArtists(String artist);
+    Artist getArtist(Long id);
 }

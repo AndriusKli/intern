@@ -1,4 +1,4 @@
-package uk.co.zenitech.intern;
+package uk.co.zenitech.intern.misc;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

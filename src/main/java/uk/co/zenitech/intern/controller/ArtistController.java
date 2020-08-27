@@ -3,17 +3,18 @@ package uk.co.zenitech.intern.controller;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uk.co.zenitech.intern.ArtistApi;
 import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.service.ArtistService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(value = "api/artist")
 @Api("api/artist")
-public class ArtistController implements ArtistApi {
+public class ArtistController {
 
     private ArtistService artistService;
 
@@ -23,15 +24,17 @@ public class ArtistController implements ArtistApi {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<Artist> getAllArtist(@RequestParam (name = "artist", required = false) String artist) {
-        return artistService.getArtists(artist);
+    public ResponseEntity<List<Artist>> getAllArtist(@RequestParam String artist) {
+        return ResponseEntity.ok(artistService.getArtists(artist));
     }
 
     @GetMapping(value = "/{artistId}")
-    @ResponseStatus(HttpStatus.OK)
-    public Artist getArtist(@PathVariable Long artistId ) {
-        return new Artist(0L, 0L, "string");
+    public ResponseEntity<Artist> getArtist(@PathVariable Long artistId ) {
+        try {
+            return ResponseEntity.ok(artistService.getArtist(artistId));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
