@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "api/user")
-@Api("api/user")
+@RequestMapping(value = "api/users")
+@Api("api/users")
 public class UserController {
 
     @GetMapping

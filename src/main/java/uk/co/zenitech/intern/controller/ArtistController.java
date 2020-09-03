@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping(value = "api/artist")
-@Api("api/artist")
+@RequestMapping(value = "api/artists")
+@Api("api/artists")
 public class ArtistController {
 
     private ArtistService artistService;
@@ -24,8 +24,9 @@ public class ArtistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Artist>> getAllArtist(@RequestParam String artist) {
-        return ResponseEntity.ok(artistService.getArtists(artist));
+    public ResponseEntity<List<Artist>> getAllArtist(@RequestParam String artist,
+                                                     @RequestParam(required = false) Long limit) {
+        return ResponseEntity.ok(artistService.getArtists(artist, limit));
     }
 
     @GetMapping(value = "/{artistId}")

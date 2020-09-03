@@ -9,7 +9,6 @@ import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.service.SongService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(value = "api/songs")
@@ -24,17 +23,15 @@ public class SongController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Song>> getSongsByName(@RequestParam String searchTerm) {
-        return ResponseEntity.ok(songService.getSongs(searchTerm));
+    public ResponseEntity<List<Song>> getSongsByName(@RequestParam String searchTerm,
+                                                     @RequestParam(required = false) Long limit) {
+        return ResponseEntity.ok(songService.getSongs(searchTerm, limit));
     }
 
     @GetMapping(value = "/{songId}")
     public ResponseEntity<Song> getSong(@PathVariable Long songId ) {
-        try {
-            return ResponseEntity.ok(songService.getSong(songId));
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(songService.getSong(songId));
+
     }
 
     @PostMapping

@@ -13,7 +13,7 @@ import java.net.URI;
 
 @Component
 public class ITunesErrorHandler implements ResponseErrorHandler {
-    Logger logger = LoggerFactory.getLogger(ITunesErrorHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ITunesErrorHandler.class);
 
     @Override
     public boolean hasError(ClientHttpResponse clientHttpResponse) throws IOException {
