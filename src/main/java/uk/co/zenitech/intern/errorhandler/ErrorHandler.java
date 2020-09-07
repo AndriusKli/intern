@@ -15,11 +15,17 @@ import java.util.NoSuchElementException;
 @ControllerAdvice
 @Component
 public class ErrorHandler {
-    Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ErrorResponse> handleError(NoSuchElementException e, ServletWebRequest request) {
+    public ResponseEntity<ErrorResponse> handleEntryNotFound(NoSuchElementException e, ServletWebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception e, ServletWebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

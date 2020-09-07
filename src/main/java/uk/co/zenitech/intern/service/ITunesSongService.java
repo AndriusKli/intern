@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import uk.co.zenitech.intern.client.ITunedFeignClient;
+import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
 import uk.co.zenitech.intern.entity.Song;
@@ -19,19 +19,19 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-public class SongServiceImp implements SongService {
+public class ITunesSongService implements SongService {
 
     private final ResponseParser responseParser;
     private final SongRepository songRepository;
-    private final ITunedFeignClient iTunedFeignClient;
+    private final ITunesFeignClient iTunesFeignClient;
     private static final Logger logger = LoggerFactory.getLogger(SongService.class);
 
 
     @Autowired
-    public SongServiceImp(ResponseParser responseParser, SongRepository songRepository, ITunedFeignClient iTunedFeignClient) {
+    public ITunesSongService(ResponseParser responseParser, SongRepository songRepository, ITunesFeignClient iTunesFeignClient) {
         this.responseParser = responseParser;
         this.songRepository = songRepository;
-        this.iTunedFeignClient = iTunedFeignClient;
+        this.iTunesFeignClient = iTunesFeignClient;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class SongServiceImp implements SongService {
     }
 
     private ResponseEntity<ITunesResponse> fetchSongData(String songName, Long limit) {
-        return iTunedFeignClient.getResults(
+        return iTunesFeignClient.getResults(
                 songName,
                 Entity.MUSIC_TRACK.getValue(),
                 Attribute.SONG_TERM.getValue(),
@@ -65,7 +65,7 @@ public class SongServiceImp implements SongService {
         List<Song> songs = responseParser.parse(
                 Song.class,
                 WrapperType.TRACK.getWrapper(),
-                iTunedFeignClient.getById(id)
+                iTunesFeignClient.getById(id)
         );
         if (songs.isEmpty()) {
             logger.warn("No songs found with the requested id: {}", id);

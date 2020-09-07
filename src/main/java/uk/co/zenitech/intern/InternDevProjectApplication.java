@@ -22,21 +22,4 @@ public class InternDevProjectApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(InternDevProjectApplication.class, args);
 	}
-
-	@Bean
-	public Docket swaggerDocket() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.apiInfo(apiInfo())
-				.select()
-				.apis(RequestHandlerSelectors.basePackage("uk.co.zenitech"))
-				.build();
 	}
-
-	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder()
-				.title("Documentation")
-				.version("0.0.1 SNAPSHOT")
-				.build();
-	}
-
-}

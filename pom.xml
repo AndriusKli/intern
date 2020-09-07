@@ -16,6 +16,15 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<maven.compiler.release>11</maven.compiler.release>
+		<swagger.version>2.9.2</swagger.version>
+		<jackson.version>2.11.2</jackson.version>
+		<mockito.version>3.3.3</mockito.version>
+		<feign.version>2.2.5.RELEASE</feign.version>
+		<hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
+		<postgresql.version>42.2.16</postgresql.version>
+		<jacoco.version>0.8.5</jacoco.version>
+		<pitest.version>1.5.2</pitest.version>
 	</properties>
 
 	<dependencies>
@@ -36,17 +45,16 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<version>2.3.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
+			<version>${swagger.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.9.2</version>
+			<version>${swagger.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -62,29 +70,28 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.11.2</version>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>3.3.3</version>
+			<version>${mockito.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
-			<version>2.2.5.RELEASE</version>
+			<version>${feign.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>6.1.5.Final</version>
+			<version>${hibernate-validator.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.16</version>
+			<version>${postgresql.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -96,14 +103,27 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.5</version>
+				<version>${jacoco.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
-				<version>1.5.2</version>
+				<version>${pitest.version}</version>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

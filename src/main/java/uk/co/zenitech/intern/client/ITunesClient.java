@@ -17,6 +17,7 @@ import java.util.Collections;
 @Deprecated
 public class ITunesClient {
 
+    private final Long DEFAULT_LIMIT = 200L;
     private final RestTemplate restTemplate = new RestTemplate();
     private static final Logger logger = LoggerFactory.getLogger(ITunesClient.class);
 
@@ -29,7 +30,7 @@ public class ITunesClient {
 
     public ResponseEntity<ITunesResponse> fetchData(String searchTerm, String entity, String attribute, Long limit) {
         logger.info("Fetching data. Search term: {} Entity: {} Attribute: {}", searchTerm, entity, attribute);
-        return restTemplate.getForEntity("https://itunes.apple.com/search?term={searchTerm}&entity={entity}&attribute={attribute}&limit={limit}",
+        return restTemplate.getForEntity("${itunes.endpoint}/search?term={searchTerm}&entity={entity}&attribute={attribute}&limit={limit}",
                 ITunesResponse.class,
                 entity,
                 searchTerm,
@@ -39,7 +40,7 @@ public class ITunesClient {
 
     public ResponseEntity<ITunesResponse> fetchById(Long id) {
         logger.info("Fetching data by Id. Id: {}", id);
-        return restTemplate.getForEntity("https://itunes.apple.com/lookup?id={id}",
+        return restTemplate.getForEntity("${itunes.endpoint}/lookup?id={id}",
                 ITunesResponse.class,
                 id);
     }

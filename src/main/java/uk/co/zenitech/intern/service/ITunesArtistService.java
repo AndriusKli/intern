@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import uk.co.zenitech.intern.client.ITunedFeignClient;
+import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
 import uk.co.zenitech.intern.entity.Artist;
@@ -20,18 +20,18 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class ArtistServiceImp implements ArtistService {
+public class ITunesArtistService implements ArtistService {
 
     private final ResponseParser responseParser;
     private final ArtistRepository artistRepository;
-    private final ITunedFeignClient iTunedFeignClient;
-    private static final Logger logger = LoggerFactory.getLogger(ArtistServiceImp.class);
+    private final ITunesFeignClient iTunesFeignClient;
+    private static final Logger logger = LoggerFactory.getLogger(ITunesArtistService.class);
 
     @Autowired
-    public ArtistServiceImp(ResponseParser responseParser, ArtistRepository artistRepository, ITunedFeignClient iTunedFeignClient) {
+    public ITunesArtistService(ResponseParser responseParser, ArtistRepository artistRepository, ITunesFeignClient iTunesFeignClient) {
         this.responseParser = responseParser;
         this.artistRepository = artistRepository;
-        this.iTunedFeignClient = iTunedFeignClient;
+        this.iTunesFeignClient = iTunesFeignClient;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ArtistServiceImp implements ArtistService {
     }
 
     private ResponseEntity<ITunesResponse> fetchArtistData(String artistName, Long limit) {
-        return iTunedFeignClient.getResults(
+        return iTunesFeignClient.getResults(
                 artistName,
                 Entity.MUSIC_ARTIST.getValue(),
                 Attribute.ARTIST_TERM.getValue(),
@@ -70,7 +70,7 @@ public class ArtistServiceImp implements ArtistService {
         List<Artist> artists = responseParser.parse(
                 Artist.class,
                 WrapperType.ARTIST.getWrapper(),
-                iTunedFeignClient.getById(id)
+                iTunesFeignClient.getById(id)
         );
         if (artists.isEmpty()) {
             logger.warn("No artist found with the requested id: {}", id);

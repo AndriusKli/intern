@@ -30,12 +30,8 @@ public class ArtistController {
     }
 
     @GetMapping(value = "/{artistId}")
-    public ResponseEntity<Artist> getArtist(@PathVariable Long artistId ) {
-        try {
-            return ResponseEntity.ok(artistService.getArtist(artistId));
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Artist> getArtist(@PathVariable Long artistId) {
+        return ResponseEntity.ok(artistService.getArtist(artistId));
     }
 
     @PostMapping

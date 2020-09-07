@@ -10,9 +10,9 @@ import uk.co.zenitech.intern.response.ITunesResponse;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-@FeignClient(name = "feignClient", url = "https://itunes.apple.com/")
+@FeignClient(name = "feignClient", url = "${itunes.endpoint}")
 @Validated
-public interface ITunedFeignClient {
+public interface ITunesFeignClient {
 
     @GetMapping(value = "search?term={searchTerm}&entity={entity}&attribute={attribute}&limit=200")
     ResponseEntity<ITunesResponse> getResults(@RequestParam String searchTerm,
