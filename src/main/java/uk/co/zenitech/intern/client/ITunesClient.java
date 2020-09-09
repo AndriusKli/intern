@@ -35,7 +35,7 @@ public class ITunesClient {
                 entity,
                 searchTerm,
                 attribute,
-                limit != null ? limit : 200);
+                limit != null ? limit : DEFAULT_LIMIT);
     }
 
     public ResponseEntity<ITunesResponse> fetchById(Long id) {

@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@Disabled
 public class ArtistServiceTests {
 
     @Mock
@@ -48,6 +49,7 @@ public class ArtistServiceTests {
 
     @Test
     @Disabled
+    @Deprecated
     void getArtistsSavesResults() {
         List<Artist> artists = Arrays.asList(
                 new Artist(1L, 1L, "John"),

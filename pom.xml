@@ -25,6 +25,7 @@
 		<postgresql.version>42.2.16</postgresql.version>
 		<jacoco.version>0.8.5</jacoco.version>
 		<pitest.version>1.5.2</pitest.version>
+		<asserj.version>3.17.2</asserj.version>
 	</properties>
 
 	<dependencies>
@@ -91,6 +92,12 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${postgresql.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>${assertj.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

@@ -2,7 +2,9 @@ package uk.co.zenitech.intern;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.co.zenitech.intern.entity.Artist;
@@ -11,13 +13,13 @@ import uk.co.zenitech.intern.response.ITunesResponse;
 import uk.co.zenitech.intern.serializer.ResponseParser;
 import uk.co.zenitech.intern.serializer.WrapperType;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ResponseParserTest {
+@Disabled
+public class ResponseParserTests {
     ResponseParser responseParser = new ResponseParser();
     ObjectMapper mapper = new ObjectMapper();
 
@@ -32,8 +34,11 @@ public class ResponseParserTest {
     ));
     ResponseEntity<ITunesResponse> songResponseEntity = new ResponseEntity<>(songResponse, HttpStatus.OK);
 
-    public ResponseParserTest() throws JsonProcessingException {
+    public ResponseParserTests() throws JsonProcessingException {
     }
+
+    @Mock
+    public ResponseEntity<ITunesResponse> mockResponse;
 
     @Test
     void parsesArtistResponseCorrectly() {
@@ -47,8 +52,7 @@ public class ResponseParserTest {
     void parsesSongResponseCorrectly() {
         List<Song> songs = responseParser.parse(Song.class, WrapperType.TRACK.getWrapper(), songResponseEntity);
         assertEquals(1, songs.size());
-        Song expectedSong = new Song(118125081L, "I'll Stand By You", "Last of the Independents","Pretenders" );
+        Song expectedSong = new Song(118125081L, "I'll Stand By You", "Last of the Independents", "Pretenders");
         assertEquals(expectedSong, songs.get(0));
     }
-
 }
