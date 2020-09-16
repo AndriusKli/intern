@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
-import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.repository.SongRepository;
 import uk.co.zenitech.intern.response.ITunesResponse;
@@ -18,7 +17,6 @@ import uk.co.zenitech.intern.serializer.WrapperType;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class ITunesSongService implements SongService {

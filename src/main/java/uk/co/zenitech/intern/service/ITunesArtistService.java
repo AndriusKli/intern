@@ -17,7 +17,6 @@ import uk.co.zenitech.intern.serializer.WrapperType;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class ITunesArtistService implements ArtistService {

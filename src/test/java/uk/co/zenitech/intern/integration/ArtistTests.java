@@ -9,11 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -21,7 +17,6 @@ import org.springframework.test.context.TestPropertySource;
 import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
-import uk.co.zenitech.intern.controller.ArtistController;
 import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.repository.ArtistRepository;
 import uk.co.zenitech.intern.response.ITunesResponse;
@@ -30,14 +25,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("/test.properties")
@@ -109,8 +102,6 @@ public class ArtistTests {
                 .assertThat()
                 .statusCode(200)
                 .extract().as(Artist.class);
-
-//        verify(artistRepository)
 
         assertThat(artists).isEqualTo(ARTIST_SANTANA);
         assertThat(artistRepository.findById(SANTANA_ID))

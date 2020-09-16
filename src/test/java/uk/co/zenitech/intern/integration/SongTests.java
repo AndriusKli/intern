@@ -18,21 +18,19 @@ import org.springframework.test.context.TestPropertySource;
 import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
-import uk.co.zenitech.intern.controller.SongController;
-import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.repository.SongRepository;
 import uk.co.zenitech.intern.response.ITunesResponse;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -136,6 +134,5 @@ public class SongTests {
                 .assertThat()
                 .statusCode(404);
     }
-
 }
 

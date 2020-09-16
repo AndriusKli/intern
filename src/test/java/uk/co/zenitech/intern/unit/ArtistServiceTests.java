@@ -11,13 +11,12 @@ import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.repository.ArtistRepository;
 import uk.co.zenitech.intern.service.ITunesArtistService;
 
-
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @Disabled
