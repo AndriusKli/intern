@@ -1,0 +1,20 @@
+{
+  "resultCount": 2,
+  "results": [
+    {
+      "wrapperType": "artist",
+      "kind": "Artist",
+      "artistName": "Santana",
+      "amgArtistId": 13645,
+      "otherProperty": "This should not cause an error",
+      "artistId": 217174
+    },
+    {
+      "wrapperType": "artist",
+      "kind": "Artist",
+      "artistName": "Santa",
+      "amgArtistId": 1,
+      "artistId": 5
+    }
+  ]
+}

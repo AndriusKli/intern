@@ -1,0 +1,23 @@
+{
+  "resultCount": 2,
+  "results": [
+    {
+      "wrapperType": "track",
+      "kind": "song",
+      "trackId": 118125081,
+      "amgArtistId": 5,
+      "artistName": "Pretenders",
+      "trackName": "I'll Stand By You",
+      "collectionName": "Last of the Independents"
+    },
+    {
+      "wrapperType": "track",
+      "kind": "song",
+      "trackId": 323123,
+      "amgArtistId": 55,
+      "artistName": "Fake Band",
+      "trackName": "Stand Fast",
+      "collectionName": "Fake Album"
+    }
+  ]
+}

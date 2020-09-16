@@ -3,18 +3,23 @@ package uk.co.zenitech.intern.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import uk.co.zenitech.intern.client.ITunesFeignClient;
+import uk.co.zenitech.intern.client.musicparams.Attribute;
+import uk.co.zenitech.intern.client.musicparams.Entity;
 import uk.co.zenitech.intern.controller.SongController;
+import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.repository.SongRepository;
 import uk.co.zenitech.intern.response.ITunesResponse;
@@ -30,20 +35,24 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestPropertySource("/test.properties")
-public class SongControllerTests {
+public class SongTests {
 
     @MockBean
     ITunesFeignClient iTunesFeignClient;
 
     @Autowired
-    SongController songController;
-
-    @Autowired
     SongRepository songRepository;
+
+    @LocalServerPort
+    int port;
+
+    @BeforeEach
+    public void setUp() {
+        RestAssured.port = port;
+    }
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final JsonNode responseNode = mapper.readTree(new File("src/test/resources/songResponse.json"));
@@ -60,7 +69,7 @@ public class SongControllerTests {
     private final Song SONG_FAKE = new Song(323123L, "Stand Fast", "Fake Album", "Fake Band");
     private final Long ID_PRETENDERS = 118125081L;
 
-    public SongControllerTests() throws IOException {
+    public SongTests() throws IOException {
     }
 
     @BeforeEach
@@ -70,12 +79,20 @@ public class SongControllerTests {
 
     @Test
     void whenGettingMultipleSongs_thenReturnsResultsAndPersists() {
-        when(iTunesFeignClient.getResults(any(), any(), any(), any())).thenReturn(songResponseEntity);
-        ResponseEntity<List<Song>> responseEntity = songController.getSongsByName("stand", 2L);
+        when(iTunesFeignClient.getResults("stand", Entity.MUSIC_TRACK.getValue(), Attribute.SONG_TERM.getValue(), 2L))
+                .thenReturn(songResponseEntity);
+        Song[] songs = RestAssured
+                .given()
+                .param("searchTerm", "stand")
+                .param("limit", 2L)
+                .when()
+                .get("/api/songs/")
+                .then()
+                .assertThat().statusCode(200)
+                .extract().as(Song[].class);
 
-        assertThat(responseEntity.getStatusCode().is2xxSuccessful());
-        assertThat(responseEntity.getBody().size()).isEqualTo(2);
-        assertThat(responseEntity.getBody().get(0).getArtistName()).isEqualTo("Pretenders");
+        assertThat(songs.length).isEqualTo(2);
+        assertThat(songs[0]).isEqualTo(SONG_PRETENDERS);
 
         assertThat(songRepository.findAll().size()).isEqualTo(2);
         assertThat(songRepository.findAll()).contains(SONG_FAKE, SONG_PRETENDERS);
@@ -84,10 +101,14 @@ public class SongControllerTests {
     @Test
     void whenFetchingSong_thenReturnsResultAndPersists() {
         when(iTunesFeignClient.getById(anyLong())).thenReturn(songResponseEntity);
-        ResponseEntity<Song> songResponse = songController.getSong(ID_PRETENDERS);
+        Song song = RestAssured.when()
+                .get("/api/songs/{id}", ID_PRETENDERS)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .extract().as(Song.class);
 
-        assertThat(songResponse.getBody().getSongId()).isEqualTo(ID_PRETENDERS);
-
+        assertThat(song).isEqualTo(SONG_PRETENDERS);
         assertThat(songRepository.findById(ID_PRETENDERS))
                 .contains(SONG_PRETENDERS);
     }
@@ -95,17 +116,25 @@ public class SongControllerTests {
     @Test
     void givenSongExistsInDb_whenFetchingSong_thenReturnsSongFromDb() {
         songRepository.save(SONG_PRETENDERS);
-        ResponseEntity<Song> songResponse = songController.getSong(ID_PRETENDERS);
+        Song song = RestAssured.when()
+                .get("/api/songs/{id}", ID_PRETENDERS)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .extract().as(Song.class);
 
-        verify(iTunesFeignClient, times(0)).getById(anyLong());
-        assertThat(songResponse.getBody().getSongId()).isEqualTo(ID_PRETENDERS);
+        verify(iTunesFeignClient, never()).getById(anyLong());
+        assertThat(song.getSongId()).isEqualTo(ID_PRETENDERS);
     }
 
     @Test
     void whenNoSongFound_thenThrowException() {
         when(iTunesFeignClient.getById(anyLong())).thenReturn(emptyResponseEntity);
-        assertThatExceptionOfType(NoSuchElementException.class)
-                .isThrownBy(() -> songController.getSong(43434L));
+        RestAssured.when()
+                .get("/api/songs/43434")
+                .then()
+                .assertThat()
+                .statusCode(404);
     }
 
 }

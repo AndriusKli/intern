@@ -42,13 +42,10 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("/test.properties")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ArtistControllerTests {
+public class ArtistTests {
 
     @MockBean
     ITunesFeignClient iTunesFeignClient;
-
-    @Autowired
-    ArtistController artistController;
 
     @Autowired
     ArtistRepository artistRepository;
@@ -60,9 +57,6 @@ public class ArtistControllerTests {
     public void setUp() {
         RestAssured.port = port;
     }
-
-    @Autowired
-    TestRestTemplate testRestTemplate;
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final JsonNode responseNode = mapper.readTree(new File("src/test/resources/artistResponse.json"));
@@ -77,7 +71,7 @@ public class ArtistControllerTests {
     private final Artist ARTIST_SANTA = new Artist(5L, 1L, "Santa");
     private final Long SANTANA_ID = 217174L;
 
-    public ArtistControllerTests() throws IOException {
+    public ArtistTests() throws IOException {
     }
 
     @BeforeEach
@@ -89,10 +83,18 @@ public class ArtistControllerTests {
     void whenGettingMultipleArtists_thenReturnsResultsAndPersists() {
         when(iTunesFeignClient.getResults("san", Entity.MUSIC_ARTIST.getValue(), Attribute.ARTIST_TERM.getValue(), 2L))
                 .thenReturn(artistResponseEntity);
-        ResponseEntity<List<Artist>> responseEntity = artistController.getArtistByName("san", 2L);
+        Artist[] artists = RestAssured
+                .given()
+                .param("searchTerm", "san")
+                .param("limit", 2L)
+                .when()
+                .get("/api/artists/")
+                .then()
+                .assertThat().statusCode(200)
+                .extract().as(Artist[].class);
 
-        assertThat(responseEntity.getBody().size()).isEqualTo(2);
-        assertThat(responseEntity.getBody().get(0).getArtistName()).isEqualTo("Santana");
+        assertThat(artists.length).isEqualTo(2);
+        assertThat(artists[0]).isEqualTo(ARTIST_SANTANA);
 
         assertThat(artistRepository.findAll().size()).isEqualTo(2);
         assertThat(artistRepository.findAll()).contains(ARTIST_SANTA, ARTIST_SANTANA);
@@ -101,11 +103,16 @@ public class ArtistControllerTests {
     @Test
     void whenFetchingArtist_thenReturnsResultAndPersists() {
         when(iTunesFeignClient.getById(SANTANA_ID)).thenReturn(artistResponseEntity);
-        ResponseEntity<Artist> artistResponse = artistController.getArtist(SANTANA_ID);
+        Artist artists = RestAssured.when()
+                .get("/api/artists/{id}", SANTANA_ID)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .extract().as(Artist.class);
 
-        assertThat(artistResponse.getBody().getArtistId())
-                .isEqualTo(SANTANA_ID);
+//        verify(artistRepository)
 
+        assertThat(artists).isEqualTo(ARTIST_SANTANA);
         assertThat(artistRepository.findById(SANTANA_ID))
                 .contains(ARTIST_SANTANA);
     }
@@ -113,17 +120,24 @@ public class ArtistControllerTests {
     @Test
     void givenArtistExistsInDb_whenFetchingArtist_thenReturnsArtistFromDb() {
         artistRepository.save(ARTIST_SANTANA);
-        ResponseEntity<Artist> artistResponse = artistController.getArtist(SANTANA_ID);
+        Artist artist = RestAssured.when()
+                .get("/api/artists/{id}", SANTANA_ID)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .extract().as(Artist.class);
 
         verify(iTunesFeignClient, times(0)).getById(anyLong());
-        assertThat(artistResponse.getBody().getArtistId())
-                .isEqualTo(SANTANA_ID);
+        assertThat(artist).isEqualTo(ARTIST_SANTANA);
     }
 
     @Test
-    void whenNoArtistFound_thenThrowException() {
+    void whenNoArtistFound_thenReturn404() {
         when(iTunesFeignClient.getById(anyLong())).thenReturn(emptyResponseEntity);
-        assertThatExceptionOfType(NoSuchElementException.class)
-                .isThrownBy(() -> artistController.getArtist(43434L));
+        RestAssured.when()
+                .get("/api/artists/43434")
+                .then()
+                .assertThat()
+                .statusCode(404);
     }
 }

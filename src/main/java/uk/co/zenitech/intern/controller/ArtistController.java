@@ -25,9 +25,9 @@ public class ArtistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Artist>> getArtistByName(@RequestParam String artist,
+    public ResponseEntity<List<Artist>> getArtistByName(@RequestParam String searchTerm,
                                                         @RequestParam(required = false) Long limit) {
-        return ResponseEntity.ok(artistService.getArtists(artist, limit));
+        return ResponseEntity.ok(artistService.getArtists(searchTerm, limit));
     }
 
     @GetMapping(value = "/{artistId}")
