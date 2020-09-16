@@ -1,10 +1,9 @@
-package uk.co.zenitech.intern;
+package uk.co.zenitech.intern.unit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.co.zenitech.intern.entity.Artist;
@@ -36,9 +35,6 @@ public class ResponseParserTests {
 
     public ResponseParserTests() throws JsonProcessingException {
     }
-
-    @Mock
-    public ResponseEntity<ITunesResponse> mockResponse;
 
     @Test
     void parsesArtistResponseCorrectly() {

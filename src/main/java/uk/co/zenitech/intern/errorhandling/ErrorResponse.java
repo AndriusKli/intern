@@ -1,4 +1,4 @@
-package uk.co.zenitech.intern.errorhandler;
+package uk.co.zenitech.intern.errorhandling;
 
 public class ErrorResponse {
     private final String url;

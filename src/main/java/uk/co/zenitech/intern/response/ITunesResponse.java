@@ -24,4 +24,12 @@ public class ITunesResponse {
     public List<JsonNode> getResults() {
         return results;
     }
+
+    @Override
+    public String toString() {
+        return "ITunesResponse{" +
+                "resultCount=" + resultCount +
+                ", results=" + results +
+                '}';
+    }
 }

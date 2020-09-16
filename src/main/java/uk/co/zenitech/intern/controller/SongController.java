@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.service.SongService;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -29,26 +31,30 @@ public class SongController {
     }
 
     @GetMapping(value = "/{songId}")
-    public ResponseEntity<Song> getSong(@PathVariable Long songId ) {
+    public ResponseEntity<Song> getSong(@PathVariable Long songId) {
         return ResponseEntity.ok(songService.getSong(songId));
 
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createSong(@RequestBody Song song) {
-
+    public ResponseEntity<Object> createSong(@RequestBody Song song) throws URISyntaxException {
+        songService.createSong(song);
+        Long id = song.getSongId();
+        return ResponseEntity.created(new URI("/{id}")).build();
     }
 
     @PutMapping(value = "/{songId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateSong(@RequestBody Song song, @PathVariable Long songId) {
-
+    public ResponseEntity<Object> updateSong(@RequestBody Song song, @PathVariable Long songId) {
+        songService.updateSong(songId, song);
+        return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping(value = "/{songId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSong(@PathVariable Long songId) {
-
+    public ResponseEntity<Object> deleteSong(@PathVariable Long songId) {
+        songService.deleteSong(songId);
+        return ResponseEntity.noContent().build();
     }
 }

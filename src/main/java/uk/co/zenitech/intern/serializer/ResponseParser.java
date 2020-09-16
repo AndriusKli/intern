@@ -7,10 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import uk.co.zenitech.intern.errorhandling.exceptions.ParsingException;
 import uk.co.zenitech.intern.response.ITunesResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ResponseParser {
@@ -18,29 +20,23 @@ public class ResponseParser {
     private static final Logger logger = LoggerFactory.getLogger(ResponseParser.class);
 
     public <T> List<T> parse(Class<T> clazz, String wrapperType, ResponseEntity<ITunesResponse> responseEntity) {
-        List<T> list = new ArrayList<>();
-        getResults(responseEntity).forEach(entry -> {
-                    if (entry.get("wrapperType").asText().equals(wrapperType)) {
-                        try {
-                            T object = objectMapper.treeToValue(entry, clazz);
-                            list.add(object);
-                        } catch (JsonProcessingException e) {
-                            logger.error("Error parsing json: {}. ", e.getMessage());
-                            throw new RuntimeException("Failed to parse provided response entity");
-                        }
-                    }
-                }
-        );
-        return list;
+        return getResults(responseEntity)
+                .stream()
+                .filter(entry -> entry.get("wrapperType").asText().equals(wrapperType))
+                .map(entry -> getClazz(entry, clazz) )
+                .collect(Collectors.toList());
+    }
+
+    private <T> T getClazz(JsonNode entry, Class<T> clazz) {
+        try {
+            return objectMapper.treeToValue(entry, clazz);
+        } catch (JsonProcessingException e) {
+            logger.info("Error processing jsonNode: {} Cause: {}" , entry, e.getMessage());
+            throw new ParsingException("Error parsing jsonNode");
+        }
     }
 
     private List<JsonNode> getResults(ResponseEntity<ITunesResponse> responseEntity) {
         return responseEntity.getBody() != null ? responseEntity.getBody().getResults() : new ArrayList<>();
     }
-
-// I'm really not sure about extracting the if try catch block into a different method. I'd just end up with another
-// method that takes three parameters, which is equally as messy looking.
-//    private <T> T processNode(JsonNode node) {
-//        return null;
-//    }
 }

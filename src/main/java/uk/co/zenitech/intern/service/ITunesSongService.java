@@ -60,12 +60,7 @@ public class ITunesSongService implements SongService {
     @Override
     @Transactional
     public Song getSong(Long id) {
-        Optional<Song> song = songRepository.findById(id);
-        if (song.isEmpty()) {
-            return fetchSong(id);
-        } else {
-            return song.get();
-        }
+        return songRepository.findById(id).orElseGet(() -> fetchSong(id));
     }
 
     private Song fetchSong(Long id) {
@@ -82,5 +77,28 @@ public class ITunesSongService implements SongService {
             songRepository.save(song);
             return song;
         }
+    }
+
+    @Override
+    @Transactional
+    public void createSong(Song song) {
+        songRepository.save(song);
+    }
+
+    @Override
+    @Transactional
+    public void deleteSong(Long id) {
+        songRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void updateSong(Long id, Song song) {
+        Song updatableSong = songRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        updatableSong.setAlbumName(song.getAlbumName());
+        updatableSong.setArtistName(song.getArtistName());
+        updatableSong.setSongId(song.getSongId());
+        updatableSong.setSongName(song.getSongName());
+        songRepository.save(updatableSong);
     }
 }

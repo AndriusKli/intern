@@ -57,13 +57,7 @@ public class ITunesArtistService implements ArtistService {
     @Override
     @Transactional
     public Artist getArtist(Long id) {
-        Optional<Artist> artist = artistRepository.findById(id);
-        if (artist.isEmpty()) {
-            return fetchArtist(id);
-        } else {
-            return artist.get();
-        }
-//        return artistRepository.findById(id).orElse(fetchArtist(id));
+        return artistRepository.findById(id).orElseGet(() -> fetchArtist(id));
     }
 
     private Artist fetchArtist(Long id) {
@@ -81,4 +75,29 @@ public class ITunesArtistService implements ArtistService {
             return artist;
         }
     }
+
+    @Override
+    @Transactional
+    public void createArtist(Artist artist) {
+        artistRepository.save(artist);
+    }
+
+    @Override
+    @Transactional
+    public void deleteArtist(Long id) {
+        artistRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateArtist(Long id, Artist artist) {
+        Artist updatableArtist = artistRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        updatableArtist.setAmgArtistId(artist.getAmgArtistId());
+        updatableArtist.setArtistId(artist.getAmgArtistId());
+        updatableArtist.setArtistName(artist.getArtistName());
+        artistRepository.save(updatableArtist);
+    }
+
+//     TODO: figure out what to do if an artist with that id already exists.
+//     Also, are we supposed to even update ids?
+
 }

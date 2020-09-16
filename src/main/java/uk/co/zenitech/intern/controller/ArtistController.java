@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.service.ArtistService;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(value = "api/artists")
@@ -24,8 +25,8 @@ public class ArtistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Artist>> getAllArtist(@RequestParam String artist,
-                                                     @RequestParam(required = false) Long limit) {
+    public ResponseEntity<List<Artist>> getArtistByName(@RequestParam String artist,
+                                                        @RequestParam(required = false) Long limit) {
         return ResponseEntity.ok(artistService.getArtists(artist, limit));
     }
 
@@ -36,19 +37,23 @@ public class ArtistController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createArtist(@RequestBody Artist artist) {
-
+    public ResponseEntity<Object> createArtist(@RequestBody Artist artist) throws URISyntaxException {
+        artistService.createArtist(artist);
+        Long id = artist.getArtistId();
+        return ResponseEntity.created(new URI("/{id}")).build();
     }
 
     @PutMapping(value = "/{artistId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateArtist(@RequestBody Artist artist, @PathVariable Long artistId) {
-
+    public ResponseEntity<Object> updateArtist(@RequestBody Artist artist, @PathVariable Long artistId) {
+        artistService.updateArtist(artistId, artist);
+        return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping(value = "/{artistId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteArtist(@PathVariable Long artistId) {
-
+    public ResponseEntity<Object> deleteArtist(@PathVariable Long artistId) {
+        artistService.deleteArtist(artistId);
+        return ResponseEntity.noContent().build();
     }
 }

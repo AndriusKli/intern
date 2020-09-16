@@ -1,4 +1,4 @@
-package uk.co.zenitech.intern.errorhandler;
+package uk.co.zenitech.intern.errorhandling;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
-import org.springframework.web.context.request.WebRequest;
+import uk.co.zenitech.intern.errorhandling.exceptions.ParsingException;
 
+import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -21,6 +22,18 @@ public class ErrorHandler {
     public ResponseEntity<ErrorResponse> handleEntryNotFound(NoSuchElementException e, ServletWebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ParsingException.class)
+    public ResponseEntity<ErrorResponse> handleParsingException(ParsingException e, ServletWebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(URISyntaxException.class)
+    public ResponseEntity<ErrorResponse> handleParsingException(URISyntaxException e, ServletWebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
