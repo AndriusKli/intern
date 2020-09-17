@@ -18,6 +18,7 @@ import org.springframework.test.context.TestPropertySource;
 import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
+import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.repository.SongRepository;
 import uk.co.zenitech.intern.response.ITunesResponse;
@@ -26,10 +27,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -123,6 +126,48 @@ public class SongTests {
 
         verify(iTunesFeignClient, never()).getById(anyLong());
         assertThat(song.getSongId()).isEqualTo(ID_PRETENDERS);
+    }
+
+    @Test
+    void createsSong() {
+        RestAssured.given()
+                .body(SONG_PRETENDERS)
+                .when()
+                .post("/api/songs/")
+                .then()
+                .assertThat().statusCode(201);
+
+        assertThat(songRepository.findById(ID_PRETENDERS)).isEqualTo(Optional.of(SONG_PRETENDERS));
+    }
+
+    @Test
+    void updatesSong() {
+        songRepository.save(SONG_PRETENDERS);
+        Song updatedSong = new Song(
+                118125081L,
+                "Renamed song",
+                "Renamed album",
+                "Renamed artist");
+
+        RestAssured.given()
+                .body(updatedSong)
+                .when()
+                .put("/api/songs/{id}", ID_PRETENDERS)
+                .then()
+                .assertThat().statusCode(202);
+
+        assertThat(songRepository.findById(ID_PRETENDERS).get()).isEqualTo(updatedSong);
+    }
+
+    @Test
+    void deleteArtist() {
+        songRepository.save(SONG_PRETENDERS);
+        RestAssured.when()
+                .delete("/api/songs/{id}", ID_PRETENDERS)
+                .then()
+                .assertThat().statusCode(204);
+
+        assertThat(songRepository.findById(ID_PRETENDERS)).isEqualTo(Optional.empty());
     }
 
     @Test

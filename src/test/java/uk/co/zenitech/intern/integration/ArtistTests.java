@@ -1,5 +1,6 @@
 package uk.co.zenitech.intern.integration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -99,8 +101,7 @@ public class ArtistTests {
         Artist artists = RestAssured.when()
                 .get("/api/artists/{id}", SANTANA_ID)
                 .then()
-                .assertThat()
-                .statusCode(200)
+                .assertThat().statusCode(200)
                 .extract().as(Artist.class);
 
         assertThat(artists).isEqualTo(ARTIST_SANTANA);
@@ -114,8 +115,7 @@ public class ArtistTests {
         Artist artist = RestAssured.when()
                 .get("/api/artists/{id}", SANTANA_ID)
                 .then()
-                .assertThat()
-                .statusCode(200)
+                .assertThat().statusCode(200)
                 .extract().as(Artist.class);
 
         verify(iTunesFeignClient, times(0)).getById(anyLong());
@@ -128,7 +128,43 @@ public class ArtistTests {
         RestAssured.when()
                 .get("/api/artists/43434")
                 .then()
-                .assertThat()
-                .statusCode(404);
+                .assertThat().statusCode(404);
+    }
+
+    @Test
+    void createsArtist() {
+        RestAssured.given()
+                .body(ARTIST_SANTANA)
+                .when()
+                .post("/api/artists/")
+                .then()
+                .assertThat().statusCode(201);
+
+        assertThat(artistRepository.findById(SANTANA_ID)).isEqualTo(Optional.of(ARTIST_SANTANA));
+    }
+
+    @Test
+    void updatesArtist() {
+        artistRepository.save(ARTIST_SANTANA);
+        Artist updatedArtist = new Artist(217174L,13645L, "New name");
+        RestAssured.given()
+                .body(updatedArtist)
+                .when()
+                .put("/api/artists/{id}", SANTANA_ID)
+                .then()
+                .assertThat().statusCode(202);
+
+        assertThat(artistRepository.findById(SANTANA_ID).get().getArtistName()).isEqualTo("New name");
+    }
+
+    @Test
+    void removesArtist() {
+        artistRepository.save(ARTIST_SANTANA);
+        RestAssured.when()
+                .delete("/api/artists/{id}", SANTANA_ID)
+                .then()
+                .assertThat().statusCode(204);
+
+        assertThat(artistRepository.findById(SANTANA_ID)).isEqualTo(Optional.empty());
     }
 }

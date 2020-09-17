@@ -91,7 +91,7 @@ public class ITunesArtistService implements ArtistService {
     public void updateArtist(Long id, Artist artist) {
         Artist updatableArtist = artistRepository.findById(id).orElseThrow(NoSuchElementException::new);
         updatableArtist.setAmgArtistId(artist.getAmgArtistId());
-        updatableArtist.setArtistId(artist.getAmgArtistId());
+        updatableArtist.setArtistId(artist.getArtistId());
         updatableArtist.setArtistName(artist.getArtistName());
         artistRepository.save(updatableArtist);
     }

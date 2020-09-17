@@ -36,22 +36,19 @@ public class ArtistController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> createArtist(@RequestBody Artist artist) throws URISyntaxException {
         artistService.createArtist(artist);
         Long id = artist.getArtistId();
-        return ResponseEntity.created(new URI("/{id}")).build();
+        return ResponseEntity.created(new URI(id.toString())).build();
     }
 
     @PutMapping(value = "/{artistId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Object> updateArtist(@RequestBody Artist artist, @PathVariable Long artistId) {
         artistService.updateArtist(artistId, artist);
         return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping(value = "/{artistId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Object> deleteArtist(@PathVariable Long artistId) {
         artistService.deleteArtist(artistId);
         return ResponseEntity.noContent().build();

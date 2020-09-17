@@ -37,22 +37,19 @@ public class SongController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> createSong(@RequestBody Song song) throws URISyntaxException {
         songService.createSong(song);
         Long id = song.getSongId();
-        return ResponseEntity.created(new URI("/{id}")).build();
+        return ResponseEntity.created(new URI(id.toString())).build();
     }
 
     @PutMapping(value = "/{songId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Object> updateSong(@RequestBody Song song, @PathVariable Long songId) {
         songService.updateSong(songId, song);
         return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping(value = "/{songId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Object> deleteSong(@PathVariable Long songId) {
         songService.deleteSong(songId);
         return ResponseEntity.noContent().build();
