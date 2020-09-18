@@ -2,7 +2,6 @@ package uk.co.zenitech.intern.controller;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.Artist;
@@ -17,7 +16,7 @@ import java.util.List;
 @Api("api/artists")
 public class ArtistController {
 
-    private ArtistService artistService;
+    private final ArtistService artistService;
 
     @Autowired
     public ArtistController(ArtistService artistService) {

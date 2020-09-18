@@ -6,11 +6,9 @@ import java.util.List;
 
 public class ITunesResponse {
 
-    private Long resultCount;
-    private List<JsonNode> results;
+    private final Long resultCount;
+    private final List<JsonNode> results;
 
-    public ITunesResponse() {
-    }
 
     public ITunesResponse(Long resultCount, List<JsonNode> results) {
         this.resultCount = resultCount;

@@ -136,6 +136,14 @@
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
 				<version>${pitest.version}</version>
+				<configuration>
+					<targetClasses>
+						<param>uk.co.zenitech.**</param>
+					</targetClasses>
+					<targetTests>
+						<param>uk.co.zenitech.**</param>
+					</targetTests>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

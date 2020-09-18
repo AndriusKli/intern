@@ -1,11 +1,15 @@
 package uk.co.zenitech.intern.controller;
 
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.User;
+import uk.co.zenitech.intern.service.UserService;
 
-import java.util.Arrays;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -13,33 +17,43 @@ import java.util.List;
 @Api("api/users")
 public class UserController {
 
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<User> getAllUsers() {
-        return Arrays.asList(new User(0L, "string"));
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.findUsers());
     }
 
     @GetMapping(value = "/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public User getUser(@PathVariable Long userId ) {
-        return new User(0L, "string");
+    public ResponseEntity<User> getUser(@PathVariable Long userId ) {
+        return ResponseEntity.ok(userService.findUser(userId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createUser(@RequestBody User user) {
-
+    public ResponseEntity<Object> createUser(@RequestBody User user) throws URISyntaxException {
+        userService.createUser(user);
+        return ResponseEntity.created(new URI(user.getUserId().toString())).build();
     }
 
     @PutMapping(value = "/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateUser(@RequestBody User user, @PathVariable Long userId) {
-
+    public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable Long userId) {
+        userService.updateUser(userId, user);
+        return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping(value = "/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long userId) {
-
+    public ResponseEntity<Object> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.noContent().build();
     }
 }
