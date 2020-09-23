@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -20,6 +21,7 @@ public class Song {
     @JsonProperty(value = "trackId")
     private Long songId;
     @JsonProperty(value = "trackName")
+    @NotNull
     private String songName;
     @JsonProperty(value = "collectionName")
     private String albumName;

@@ -2,7 +2,8 @@ package uk.co.zenitech.intern.client.musicparams;
 
 public enum Entity {
     MUSIC_ARTIST("musicArtist"),
-    MUSIC_TRACK("musicTrack");
+    MUSIC_TRACK("musicTrack"),
+    ALBUM("album");
 
     private final String value;
 

@@ -1,0 +1,27 @@
+{
+  "resultCount": 1,
+  "results": [
+    {
+      "wrapperType": "collection",
+      "collectionType": "Album",
+      "artistId": 5040714,
+      "collectionId": 574049507,
+      "amgArtistId": 3496,
+      "artistName": "AC/DC",
+      "collectionName": "The Razors Edge",
+      "collectionCensoredName": "The Razors Edge",
+      "artistViewUrl": "https://music.apple.com/us/artist/ac-dc/5040714?uo=4",
+      "collectionViewUrl": "https://music.apple.com/us/album/the-razors-edge/574049507?uo=4",
+      "artworkUrl60": "https://is4-ssl.mzstatic.com/image/thumb/Music/v4/81/17/f9/8117f9c5-ba41-97e8-1de5-cf75b0d4cc5f/source/60x60bb.jpg",
+      "artworkUrl100": "https://is4-ssl.mzstatic.com/image/thumb/Music/v4/81/17/f9/8117f9c5-ba41-97e8-1de5-cf75b0d4cc5f/source/100x100bb.jpg",
+      "collectionPrice": 9.99,
+      "collectionExplicitness": "notExplicit",
+      "trackCount": 13,
+      "copyright": "℗ 1990 Leidseplein Presse B.V.",
+      "country": "USA",
+      "currency": "USD",
+      "releaseDate": "2012-11-19T08:00:00Z",
+      "primaryGenreName": "Hard Rock"
+    }
+  ]
+}

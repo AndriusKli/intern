@@ -1,24 +1,32 @@
 package uk.co.zenitech.intern.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Artist {
+public class Album {
 
     @Id
+    @JsonProperty(value = "collectionId")
+    private Long albumId;
+
     private Long artistId;
-    private Long amgArtistId;
-    @NotNull
-    private String artistName;
+
+    @JsonProperty(value = "artworkUrl100")
+    private String albumCover;
+
+    private Long trackCount;
+
+    @JsonProperty(value = "primaryGenreName")
+    private String genre;
 }

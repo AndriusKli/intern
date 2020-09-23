@@ -2,7 +2,8 @@ package uk.co.zenitech.intern.serializer;
 
 public enum WrapperType {
     TRACK("track"),
-    ARTIST("artist");
+    ARTIST("artist"),
+    COLLECTION("collection");
 
     private final String wrapper;
 

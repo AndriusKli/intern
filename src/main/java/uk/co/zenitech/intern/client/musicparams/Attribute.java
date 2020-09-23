@@ -2,7 +2,8 @@ package uk.co.zenitech.intern.client.musicparams;
 
 public enum Attribute {
     SONG_TERM("songTerm"),
-    ARTIST_TERM("artistTerm");
+    ARTIST_TERM("artistTerm"),
+    ALBUM_TERM("albumTerm");
 
     private final String value;
 

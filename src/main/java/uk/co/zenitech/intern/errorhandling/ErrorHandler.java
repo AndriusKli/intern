@@ -33,7 +33,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler(URISyntaxException.class)
-    public ResponseEntity<ErrorResponse> handleParsingException(URISyntaxException e, ServletWebRequest request) {
+    public ResponseEntity<ErrorResponse> handleURIException(URISyntaxException e, ServletWebRequest request) {
         logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
