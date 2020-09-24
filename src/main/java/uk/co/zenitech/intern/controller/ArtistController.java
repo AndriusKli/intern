@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.Artist;
-import uk.co.zenitech.intern.service.ArtistService;
+import uk.co.zenitech.intern.service.artist.ArtistService;
 
 import java.net.URI;
 import java.net.URISyntaxException;

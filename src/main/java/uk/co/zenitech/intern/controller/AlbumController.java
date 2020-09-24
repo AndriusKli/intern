@@ -3,12 +3,9 @@ package uk.co.zenitech.intern.controller;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.Album;
-import uk.co.zenitech.intern.service.AlbumService;
+import uk.co.zenitech.intern.service.album.AlbumService;
 
 import java.util.List;
 
@@ -28,6 +25,11 @@ public class AlbumController {
     public ResponseEntity<List<Album>> getAlbumsByName(@RequestParam String searchTerm,
                                                        @RequestParam(required = false) Long limit) {
         return ResponseEntity.ok(albumService.getAlbums(searchTerm, limit));
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Album> getAlbumById(@PathVariable Long id) {
+        return ResponseEntity.ok(albumService.getAlbum(id));
     }
 
     // TODO

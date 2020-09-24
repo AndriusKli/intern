@@ -20,28 +20,28 @@ public class ErrorHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorResponse> handleEntryNotFound(NoSuchElementException e, ServletWebRequest request) {
-        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage());
+        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage(), e);
         ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ParsingException.class)
     public ResponseEntity<ErrorResponse> handleParsingException(ParsingException e, ServletWebRequest request) {
-        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage());
+        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage(), e);
         ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(URISyntaxException.class)
     public ResponseEntity<ErrorResponse> handleURIException(URISyntaxException e, ServletWebRequest request) {
-        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage());
+        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage(), e);
         ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e, ServletWebRequest request) {
-        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage());
+        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage(), e);
         ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }

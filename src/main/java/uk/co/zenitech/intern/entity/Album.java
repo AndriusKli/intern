@@ -1,16 +1,20 @@
 package uk.co.zenitech.intern.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -22,6 +26,9 @@ public class Album {
 
     private Long artistId;
 
+    @JsonProperty(value = "collectionName")
+    private String albumName;
+
     @JsonProperty(value = "artworkUrl100")
     private String albumCover;
 
@@ -29,4 +36,29 @@ public class Album {
 
     @JsonProperty(value = "primaryGenreName")
     private String genre;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Song> songs;
+
+    public List<Song> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(List<Song> songs) {
+        this.songs = songs;
+    }
+
+    @Override
+    public String toString() {
+        return "Album{" +
+                "albumId=" + albumId +
+                ", artistId=" + artistId +
+                ", albumName='" + albumName + '\'' +
+                ", albumCover='" + albumCover + '\'' +
+                ", trackCount=" + trackCount +
+                ", genre='" + genre + '\'' +
+                ", songs=" + songs +
+                '}';
+    }
 }

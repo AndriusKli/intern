@@ -1,4 +1,4 @@
-package uk.co.zenitech.intern.service;
+package uk.co.zenitech.intern.service.song;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,6 @@ import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
 import uk.co.zenitech.intern.entity.Song;
-import uk.co.zenitech.intern.repository.SongRepository;
 import uk.co.zenitech.intern.response.ITunesResponse;
 import uk.co.zenitech.intern.serializer.ResponseParser;
 import uk.co.zenitech.intern.serializer.WrapperType;

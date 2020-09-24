@@ -8,8 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
+import uk.co.zenitech.intern.entity.Playlist;
 import uk.co.zenitech.intern.entity.User;
-import uk.co.zenitech.intern.repository.UserRepository;
+import uk.co.zenitech.intern.service.user.UserRepository;
 
 import java.util.Optional;
 
@@ -71,7 +72,7 @@ public class UserTests {
                 .then()
                 .assertThat().statusCode(201);
 
-        assertThat(userRepository.findById(SAMPLE_USER_ID)).isEqualTo(Optional.of(SAMPLE_USER));
+        assertThat(userRepository.findById(SAMPLE_USER_ID).get().getUserName()).isEqualTo("Username");
     }
 
     @Test

@@ -1,9 +1,8 @@
-package uk.co.zenitech.intern.service;
+package uk.co.zenitech.intern.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.co.zenitech.intern.entity.User;
-import uk.co.zenitech.intern.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;

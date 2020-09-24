@@ -1,6 +1,5 @@
 package uk.co.zenitech.intern.integration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -19,7 +18,7 @@ import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
 import uk.co.zenitech.intern.entity.Artist;
-import uk.co.zenitech.intern.repository.ArtistRepository;
+import uk.co.zenitech.intern.service.artist.ArtistRepository;
 import uk.co.zenitech.intern.response.ITunesResponse;
 
 import java.io.File;

@@ -23,4 +23,7 @@ public interface ITunesFeignClient {
 
     @GetMapping(value = "lookup?id={id}")
     ResponseEntity<ITunesResponse> getById(@RequestParam Long id);
+
+    @GetMapping(value = "lookup?id={id}&entity=song")
+    ResponseEntity<ITunesResponse> getAlbumSongs(@RequestParam Long id);
 }

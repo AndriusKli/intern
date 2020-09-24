@@ -1,4 +1,4 @@
-package uk.co.zenitech.intern.service;
+package uk.co.zenitech.intern.service.artist;
 
 import uk.co.zenitech.intern.entity.Artist;
 

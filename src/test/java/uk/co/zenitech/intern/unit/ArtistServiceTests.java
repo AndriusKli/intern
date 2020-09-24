@@ -8,8 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.co.zenitech.intern.entity.Artist;
-import uk.co.zenitech.intern.repository.ArtistRepository;
-import uk.co.zenitech.intern.service.ITunesArtistService;
+import uk.co.zenitech.intern.service.artist.ArtistRepository;
+import uk.co.zenitech.intern.service.artist.ITunesArtistService;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;

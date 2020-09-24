@@ -1,4 +1,4 @@
-package uk.co.zenitech.intern.service;
+package uk.co.zenitech.intern.service.user;
 
 import uk.co.zenitech.intern.entity.User;
 

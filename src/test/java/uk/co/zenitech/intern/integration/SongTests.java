@@ -18,9 +18,8 @@ import org.springframework.test.context.TestPropertySource;
 import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
-import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.entity.Song;
-import uk.co.zenitech.intern.repository.SongRepository;
+import uk.co.zenitech.intern.service.song.SongRepository;
 import uk.co.zenitech.intern.response.ITunesResponse;
 
 import java.io.File;
@@ -159,7 +158,7 @@ public class SongTests {
     }
 
     @Test
-    void deleteArtist() {
+    void deleteSong() {
         songRepository.save(SONG_PRETENDERS);
         RestAssured.when()
                 .delete("/api/songs/{id}", ID_PRETENDERS)

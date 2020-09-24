@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.Song;
-import uk.co.zenitech.intern.service.SongService;
+import uk.co.zenitech.intern.service.song.SongService;
 
 import java.net.URI;
 import java.net.URISyntaxException;
