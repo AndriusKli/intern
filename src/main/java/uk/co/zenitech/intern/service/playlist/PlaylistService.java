@@ -9,6 +9,6 @@ public interface PlaylistService {
     List<Playlist> getPlaylists(Long userId);
     Playlist getPlaylist(Long userId, Long playlistId);
     void createPlaylist(Long userId);
-    void addSong(Long playlistId, Song song);
-    void removeSong(Long playlistId, Song song);
+    void addSong(Long userId, Long playlistId, Song song);
+    void removeSong(Long userId, Long playlistId, Song song);
 }

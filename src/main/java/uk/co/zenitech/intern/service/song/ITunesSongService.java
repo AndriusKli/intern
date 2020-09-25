@@ -43,6 +43,7 @@ public class ITunesSongService implements SongService {
                 fetchSongData(songName, limit)
         );
         songRepository.saveAll(songs);
+        songRepository.flush();
         return songs;
     }
 
@@ -71,7 +72,7 @@ public class ITunesSongService implements SongService {
             throw new NoSuchElementException("No songs with the requested id found");
         } else {
             Song song = songs.get(0);
-            songRepository.save(song);
+            songRepository.saveAndFlush(song);
             return song;
         }
     }
@@ -79,7 +80,7 @@ public class ITunesSongService implements SongService {
     @Override
     @Transactional
     public void createSong(Song song) {
-        songRepository.save(song);
+        songRepository.saveAndFlush(song);
     }
 
     @Override

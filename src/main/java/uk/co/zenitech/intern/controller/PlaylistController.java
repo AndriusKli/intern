@@ -46,6 +46,7 @@ public class PlaylistController {
     ResponseEntity<Void> addSongToPlaylist(@PathVariable Long userId,
                                            @PathVariable Long playlistId,
                                            @RequestBody Song song) {
-        return null;
+        playlistService.addSong(userId, playlistId, song);
+        return ResponseEntity.accepted().build();
     }
 }

@@ -35,19 +35,19 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createUser(@RequestBody User user) throws URISyntaxException {
+    public ResponseEntity<Void> createUser(@RequestBody User user) throws URISyntaxException {
         userService.createUser(user);
         return ResponseEntity.created(new URI(user.getUserId().toString())).build();
     }
 
     @PutMapping(value = "/{userId}")
-    public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable Long userId) {
+    public ResponseEntity<Void> updateUser(@RequestBody User user, @PathVariable Long userId) {
         userService.updateUser(userId, user);
         return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping(value = "/{userId}")
-    public ResponseEntity<Object> deleteUser(@PathVariable Long userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }

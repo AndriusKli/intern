@@ -1,20 +1,25 @@
 package uk.co.zenitech.intern.service.playlist;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.co.zenitech.intern.entity.Playlist;
 import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.entity.User;
+
 import uk.co.zenitech.intern.service.user.UserRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
 
 @Service
 public class ITunesPlaylistService implements PlaylistService {
 
     private final PlaylistRepository playlistRepository;
     private final UserRepository userRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ITunesPlaylistService.class);
 
     @Autowired
     public ITunesPlaylistService(PlaylistRepository playlistRepository, UserRepository userRepository) {
@@ -44,16 +49,22 @@ public class ITunesPlaylistService implements PlaylistService {
         Playlist playlist = new Playlist();
         user.getPlaylists().add(playlist);
         playlist.setUser(user);
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
     }
 
     @Override
-    public void addSong(Long playlistId, Song song) {
-
+    public void addSong(Long userId, Long playlistId, Song song) {
+        Playlist playlist = getPlaylist(userId, playlistId);
+        logger.info("Adding song {} to user's (ID: {}) playlist (ID: {})", song, userId, playlistId);
+        playlist.getSongs().add(song);
+        playlistRepository.save(playlist);
     }
 
     @Override
-    public void removeSong(Long playlistId, Song song) {
-
+    public void removeSong(Long userId, Long playlistId, Song song) {
+        Playlist playlist = getPlaylist(userId, playlistId);
+        logger.info("Removing song {} to user's (ID: {}) playlist (ID: {})", song, userId, playlistId);
+        playlist.getSongs().remove(song);
+        playlistRepository.save(playlist);
     }
 }

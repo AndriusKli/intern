@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -99,10 +99,13 @@ public class AlbumTests {
     void whenAlbumIsNotInDb_thenRetrievesAlbumAndSongs_andThenPersists() {
         when(iTunesFeignClient.getById(ALBUM_ID)).thenReturn(albumResponseEntity);
         when(iTunesFeignClient.getAlbumSongs(ALBUM_ID)).thenReturn(albumResponseEntity);
-        RestAssured.when()
+        Album album = RestAssured.when()
                 .get("api/albums/{id}", ALBUM_ID)
                 .then()
-                .assertThat().statusCode(200);
+                .assertThat().statusCode(200)
+                .extract().as(Album.class);
+
+        assertThat(album.getSongs().size()).isEqualTo(12L);
 
         assertThat(albumRepository.findAll().size()).isEqualTo(1L);
         assertThat(songRepository.findAll().size()).isEqualTo(12L);
@@ -123,11 +126,6 @@ public class AlbumTests {
         verify(iTunesFeignClient, never()).getById(anyLong());
         assertThat(albumRepository.findAll().size()).isEqualTo(1L);
         assertThat(songRepository.findAll().size()).isEqualTo(12L);
-
-        RestAssured.when()
-                .get("api/albums/{id}", ALBUM_ID)
-                .then()
-                .assertThat().statusCode(200);
     }
 
     @Test

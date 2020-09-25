@@ -1,0 +1,18 @@
+version: "3"
+services:
+  app:
+    image: itunes:latest
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    environment:
+      - spring.datasource.url=jdbc:postgresql://db:5432/testdb
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=testdb
+      - POSTGRES_USER=USER
+      - POSTGRES_PASSWORD=password

@@ -24,6 +24,7 @@ import uk.co.zenitech.intern.service.user.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,10 +44,9 @@ public class PlaylistTests {
     @LocalServerPort
     int port;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final User SAMPLE_USER = new User(1L, "Username");
     private final Long SAMPLE_USER_ID = 1L;
-    private final Playlist EMPTY_PLAYLIST = new Playlist();
+    private final Song SAMPLE_SONG = new Song(2L, "name", "album", "artist");
 
     @BeforeEach
     public void setUp() {
@@ -57,10 +57,10 @@ public class PlaylistTests {
     void getsPlaylists() {
         userRepository.save(SAMPLE_USER);
         User user = userRepository.findById(SAMPLE_USER_ID).get();
-        user.setPlaylists(new ArrayList<>());
-//        EMPTY_PLAYLIST.setUser(user);
-        user.setPlaylists(Collections.singletonList(EMPTY_PLAYLIST));
-        userRepository.save(user);
+        Playlist playlist = new Playlist();
+        playlist.setUser(user);
+        user.setPlaylists(Collections.singletonList(playlist));
+        userRepository.saveAndFlush(user);
 
         Playlist[] playlists = RestAssured.when()
                 .get("/api/users/{id}/playlists", SAMPLE_USER_ID)
@@ -68,10 +68,9 @@ public class PlaylistTests {
                 .assertThat().statusCode(200)
                 .extract().as(Playlist[].class);
 
-        System.out.println(playlists[0].getUser());
         assertThat(playlists.length).isEqualTo(1);
+        assertThat(playlists[0].getSongs()).isEmpty();
         assertThat(playlistRepository.findAll().size()).isEqualTo(1);
-
     }
 
     @Test
@@ -90,9 +89,9 @@ public class PlaylistTests {
                 .assertThat().statusCode(200)
                 .extract().as(Playlist.class);
 
-        //assertThat(playlist.getUser()).isNotNull();
-        assertThat(playlist.getPlaylistId()).isEqualTo(2L);
-        assertThat(playlistRepository.findById(2L)).isEmpty();
+        assertThat(playlist).isNotNull();
+        assertThat(playlist.getSongs()).isEmpty();
+        assertThat(playlistRepository.findAll().size()).isEqualTo(1);
     }
 
     @Test
@@ -106,4 +105,46 @@ public class PlaylistTests {
         assertThat(playlistRepository.findAll().size()).isEqualTo(1L);
         assertThat(playlistRepository.findAll().get(0).getUser().getUserId()).isEqualTo(SAMPLE_USER_ID);
     }
+
+    @Test
+    @Transactional
+    void addsSong() {
+        RestAssured.given().body(SAMPLE_USER).post("/api/users");
+        RestAssured.post("/api/users/{id}/playlists", SAMPLE_USER_ID);
+        RestAssured.given().body(SAMPLE_SONG).post("/api/songs");
+
+        RestAssured.given()
+                .body(SAMPLE_SONG)
+                .when()
+                .put("/api/users/{userId}/playlists/{playlistId}", SAMPLE_USER_ID, 2)
+                .then()
+                .assertThat().statusCode(202);
+
+
+        assertThat(playlistRepository.findById(2L).get().getSongs().size()).isEqualTo(1L);
+    }
+
+//    @Test
+//    void addsSong() {
+//        User user = new User();
+//        Song song = SAMPLE_SONG;
+//        Playlist playlist = new Playlist();
+//
+//        playlist.setUser(user);
+//        user.setPlaylists(Collections.singletonList(playlist));
+//
+//        song.setPlaylists(Collections.singletonList(playlist));
+//        playlist.setSongs(Collections.singletonList(song));
+//
+//        userRepository.save(user);
+//
+//        RestAssured.given()
+//                .body(SAMPLE_SONG)
+//                .when()
+//                .put("/api/users/{userId}/playlists/{playlistId}", SAMPLE_USER_ID, 2)
+//                .then()
+//                .assertThat().statusCode(202);
+//
+//        assertThat(playlistRepository.findById(2L).get().getSongs().size()).isEqualTo(1L);
+//    }
 }

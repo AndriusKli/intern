@@ -38,7 +38,8 @@ public class Album {
     private String genre;
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
-    @JsonIgnore
+//    @JsonIgnore
+    // Might need to change some things in the service if we don't want to get songs when retrieving an individual album.
     private List<Song> songs;
 
     public List<Song> getSongs() {

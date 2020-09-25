@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.Album;
+import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.service.album.AlbumService;
 
 import java.util.List;
@@ -27,10 +28,15 @@ public class AlbumController {
         return ResponseEntity.ok(albumService.getAlbums(searchTerm, limit));
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Album> getAlbumById(@PathVariable Long id) {
-        return ResponseEntity.ok(albumService.getAlbum(id));
+    @GetMapping(value = "/{albumId}")
+    public ResponseEntity<Album> getAlbumById(@PathVariable Long albumId) {
+        return ResponseEntity.ok(albumService.getAlbum(albumId));
     }
+
+//    @GetMapping(value = "/{albumId}/songs")
+//    public ResponseEntity<List<Song>> getAlbumSongs(@PathVariable Long albumId) {
+//        return null;
+//    }
 
     // TODO
     // https://itunes.apple.com/search?term=life&entity=album&attribute=albumTerm

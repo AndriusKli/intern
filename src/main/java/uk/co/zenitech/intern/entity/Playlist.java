@@ -23,8 +23,8 @@ public class Playlist {
     @JsonIgnore
     private User user;
 
-    @ManyToMany
-    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+//    @JsonIgnore
     @JoinTable(
             name = "playlistSongs",
             joinColumns = @JoinColumn(name = "playlistId"),

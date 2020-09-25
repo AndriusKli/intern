@@ -46,6 +46,7 @@ public class ITunesAlbumService implements AlbumService {
                 fetchAlbumData(album, limit)
         );
         albumRepository.saveAll(albums);
+        albumRepository.flush();
         return albums;
     }
 
@@ -57,6 +58,7 @@ public class ITunesAlbumService implements AlbumService {
                 limit);
     }
 
+    // Potentially far too contrived logic that needs to be changed.
     @Override
     @Transactional
     public Album getAlbum(Long id) {
@@ -65,6 +67,7 @@ public class ITunesAlbumService implements AlbumService {
         if (album.getSongs() == null || album.getSongs().isEmpty()) {
             logger.info("Album ID {} does not have any songs assigned to it, fetching songs from ITunes", id);
             fetchAlbumSongs(id);
+            album = albumRepository.findById(id).orElseThrow(NoSuchElementException::new);
         }
         return album;
     }
@@ -81,7 +84,7 @@ public class ITunesAlbumService implements AlbumService {
             throw new NoSuchElementException("No album with the requested id found");
         } else {
             Album album = albums.get(0);
-            albumRepository.save(album);
+            albumRepository.saveAndFlush(album);
             return album;
         }
     }
@@ -95,6 +98,6 @@ public class ITunesAlbumService implements AlbumService {
         Album album = albumRepository.findById(albumId).orElseThrow(NoSuchElementException::new);
         songs.forEach(song -> song.setAlbum(album));
         album.setSongs(songs);
-        albumRepository.save(album);
+        albumRepository.saveAndFlush(album);
     }
 }
