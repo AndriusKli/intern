@@ -2,7 +2,6 @@ FROM maven:3.6.3-jdk-11 AS build
 COPY src src
 COPY pom.xml pom.xml
 RUN mvn clean install -DskipTests
-RUN ls
 
 FROM openjdk:11
 COPY --from=build target target

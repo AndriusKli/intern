@@ -25,7 +25,6 @@ public class ITunesAlbumService implements AlbumService {
     private final ResponseParser responseParser;
     private final AlbumRepository albumRepository;
     private final ITunesFeignClient iTunesFeignClient;
-    private final SongRepository songRepository;
     private static final Logger logger = LoggerFactory.getLogger(ITunesAlbumService.class);
 
     @Autowired
@@ -33,7 +32,6 @@ public class ITunesAlbumService implements AlbumService {
         this.responseParser = responseParser;
         this.albumRepository = albumRepository;
         this.iTunesFeignClient = iTunesFeignClient;
-        this.songRepository = songRepository;
     }
 
 

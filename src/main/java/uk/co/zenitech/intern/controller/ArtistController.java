@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uk.co.zenitech.intern.documentation.ArtistApi;
 import uk.co.zenitech.intern.entity.Artist;
 import uk.co.zenitech.intern.service.artist.ArtistService;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/artists")
 @Api("api/artists")
-public class ArtistController {
+public class ArtistController implements ArtistApi {
 
     private final ArtistService artistService;
 
@@ -24,8 +25,8 @@ public class ArtistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Artist>> getArtistByName(@RequestParam String searchTerm,
-                                                        @RequestParam(required = false) Long limit) {
+    public ResponseEntity<List<Artist>> getArtistsByName(@RequestParam String searchTerm,
+                                                         @RequestParam(required = false) Long limit) {
         return ResponseEntity.ok(artistService.getArtists(searchTerm, limit));
     }
 

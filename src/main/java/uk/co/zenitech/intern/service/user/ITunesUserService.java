@@ -25,7 +25,16 @@ public class ITunesUserService implements UserService {
 
     @Override
     public User findUser(Long id) {
-        return userRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User with the id " + id + " was not found."));
+    }
+
+    @Override
+    public User findUserByUsername(String username) {
+        return findUsers().stream()
+                .filter(user -> user.getUserName().toLowerCase().equals(username.toLowerCase().trim()))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("User with the username " + username + " was not found."));
     }
 
     @Override

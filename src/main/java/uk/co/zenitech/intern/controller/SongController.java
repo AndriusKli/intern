@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uk.co.zenitech.intern.documentation.SongApi;
 import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.service.song.SongService;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/songs")
 @Api("api/songs")
-public class SongController {
+public class SongController implements SongApi {
 
     private final SongService songService;
 

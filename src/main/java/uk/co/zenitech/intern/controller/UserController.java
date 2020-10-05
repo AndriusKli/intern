@@ -2,7 +2,6 @@ package uk.co.zenitech.intern.controller;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.co.zenitech.intern.entity.User;
@@ -32,6 +31,11 @@ public class UserController {
     @GetMapping(value = "/{userId}")
     public ResponseEntity<User> getUser(@PathVariable Long userId ) {
         return ResponseEntity.ok(userService.findUser(userId));
+    }
+
+    @GetMapping
+    public ResponseEntity<User> getUserByName(@RequestParam String username) {
+        return ResponseEntity.ok(userService.findUserByUsername(username));
     }
 
     @PostMapping

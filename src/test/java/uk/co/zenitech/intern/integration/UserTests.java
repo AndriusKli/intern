@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
-import uk.co.zenitech.intern.entity.Playlist;
 import uk.co.zenitech.intern.entity.User;
 import uk.co.zenitech.intern.service.user.UserRepository;
 

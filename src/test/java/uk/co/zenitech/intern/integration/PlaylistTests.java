@@ -1,32 +1,21 @@
 package uk.co.zenitech.intern.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import io.restassured.parsing.Parser;
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.web.bind.annotation.RestController;
-import uk.co.zenitech.intern.client.ITunesFeignClient;
-import uk.co.zenitech.intern.entity.Album;
 import uk.co.zenitech.intern.entity.Playlist;
 import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.entity.User;
 import uk.co.zenitech.intern.service.playlist.PlaylistRepository;
-import uk.co.zenitech.intern.service.song.SongRepository;
 import uk.co.zenitech.intern.service.user.UserRepository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -114,7 +103,7 @@ public class PlaylistTests {
         RestAssured.given().body(SAMPLE_SONG).post("/api/songs");
 
         RestAssured.given()
-                .body(SAMPLE_SONG)
+                .param("songId", 2)
                 .when()
                 .put("/api/users/{userId}/playlists/{playlistId}", SAMPLE_USER_ID, 2)
                 .then()

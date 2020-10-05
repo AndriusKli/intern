@@ -19,8 +19,8 @@ import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
 import uk.co.zenitech.intern.entity.Song;
-import uk.co.zenitech.intern.service.song.SongRepository;
 import uk.co.zenitech.intern.response.ITunesResponse;
+import uk.co.zenitech.intern.service.song.SongRepository;
 
 import java.io.File;
 import java.io.IOException;

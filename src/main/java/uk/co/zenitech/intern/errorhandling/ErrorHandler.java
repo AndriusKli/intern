@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import uk.co.zenitech.intern.errorhandling.exceptions.ParsingException;
 
+import javax.validation.ConstraintViolationException;
 import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
 
@@ -20,9 +21,16 @@ public class ErrorHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorResponse> handleEntryNotFound(NoSuchElementException e, ServletWebRequest request) {
-        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage(), e);
+        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleEntryNotFound(ConstraintViolationException e, ServletWebRequest request) {
+        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ParsingException.class)
