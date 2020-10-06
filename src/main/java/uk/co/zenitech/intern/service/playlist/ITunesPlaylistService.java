@@ -32,7 +32,7 @@ public class ITunesPlaylistService implements PlaylistService {
     @Override
     public List<Playlist> getPlaylists(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("Playlist with the id " + userId + " was not found."));
+                .orElseThrow(() -> new NoSuchElementException("User with the id " + userId + " was not found."));
         return user.getPlaylists();
     }
 
@@ -52,7 +52,7 @@ public class ITunesPlaylistService implements PlaylistService {
         Playlist playlist = new Playlist();
         user.getPlaylists().add(playlist);
         playlist.setUser(user);
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
     }
 
     @Override
@@ -65,6 +65,7 @@ public class ITunesPlaylistService implements PlaylistService {
             playlistRepository.save(playlist);
         } else {
             logger.info("Song already exist in playlist (ID: {}): {}. Not adding duplicate.", playlistId, song);
+            // TODO notify the user that a duplicate song exists
         }
     }
 

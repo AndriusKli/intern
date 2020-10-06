@@ -10,7 +10,7 @@ import uk.co.zenitech.intern.response.ITunesResponse;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-@FeignClient(name = "feignClient", url = "${itunes.endpoint}")
+@FeignClient(name = "feignClient", url = "${itunes.endpoint}", configuration = FeignConfig.class)
 @Validated
 public interface ITunesFeignClient {
 

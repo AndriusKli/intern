@@ -41,7 +41,7 @@ public class UserTests {
         userRepository.save(SAMPLE_USER);
         userRepository.save(SAMPLE_USER2);
         User[] users = RestAssured.when()
-                .get("/api/users")
+                .get("/api/users/all")
                 .then()
                 .assertThat().statusCode(200)
                 .extract().as(User[].class);

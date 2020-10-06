@@ -42,6 +42,7 @@ public class PlaylistTests {
         RestAssured.port = port;
     }
 
+    // TODO tidy up tests
     @Test
     void getsPlaylists() {
         userRepository.save(SAMPLE_USER);
@@ -108,7 +109,6 @@ public class PlaylistTests {
                 .put("/api/users/{userId}/playlists/{playlistId}", SAMPLE_USER_ID, 2)
                 .then()
                 .assertThat().statusCode(202);
-
 
         assertThat(playlistRepository.findById(2L).get().getSongs().size()).isEqualTo(1L);
     }

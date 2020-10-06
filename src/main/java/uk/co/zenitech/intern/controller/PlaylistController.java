@@ -41,6 +41,8 @@ public class PlaylistController implements PlaylistApi {
         return ResponseEntity.created(new URI(userId.toString())).build();
     }
 
+    // TODO change to Post mapping, and pass the song via body instead of params.
+    // Ask Zilvinas
     @PutMapping("/{playlistId}")
     public ResponseEntity<Void> addSongToPlaylist(@PathVariable Long userId,
                                            @PathVariable Long playlistId,

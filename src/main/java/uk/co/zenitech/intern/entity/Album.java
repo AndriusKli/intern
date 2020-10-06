@@ -38,9 +38,8 @@ public class Album {
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
 //    @JsonIgnore
-    // Might need to change some things in the service if we don't want to get songs when retrieving an individual album.
     private List<Song> songs;
-
+// TODO check if assigning an empty array removes the need for nullcheck @ service
     public List<Song> getSongs() {
         return songs;
     }

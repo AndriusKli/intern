@@ -36,20 +36,20 @@ public class ArtistController implements ArtistApi {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createArtist(@RequestBody Artist artist) throws URISyntaxException {
+    public ResponseEntity<Void> createArtist(@RequestBody Artist artist) throws URISyntaxException {
         artistService.createArtist(artist);
         Long id = artist.getArtistId();
         return ResponseEntity.created(new URI(id.toString())).build();
     }
 
     @PutMapping(value = "/{artistId}")
-    public ResponseEntity<Object> updateArtist(@RequestBody Artist artist, @PathVariable Long artistId) {
+    public ResponseEntity<Void> updateArtist(@RequestBody Artist artist, @PathVariable Long artistId) {
         artistService.updateArtist(artistId, artist);
         return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping(value = "/{artistId}")
-    public ResponseEntity<Object> deleteArtist(@PathVariable Long artistId) {
+    public ResponseEntity<Void> deleteArtist(@PathVariable Long artistId) {
         artistService.deleteArtist(artistId);
         return ResponseEntity.noContent().build();
     }
