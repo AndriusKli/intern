@@ -8,19 +8,27 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
+import uk.co.zenitech.intern.errorhandling.exceptions.DuplicateEntryException;
+import uk.co.zenitech.intern.errorhandling.exceptions.EntityNotInDbException;
 import uk.co.zenitech.intern.errorhandling.exceptions.ParsingException;
 
 import javax.validation.ConstraintViolationException;
 import java.net.URISyntaxException;
-import java.util.NoSuchElementException;
 
 @ControllerAdvice
 @Component
 public class ErrorHandler {
     private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ErrorResponse> handleEntryNotFound(NoSuchElementException e, ServletWebRequest request) {
+    @ExceptionHandler(EntityNotInDbException.class)
+    public ResponseEntity<ErrorResponse> handleEntryNotFound(EntityNotInDbException e, ServletWebRequest request) {
+        logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DuplicateEntryException.class)
+    public ResponseEntity<ErrorResponse> handleEntryNotFound(DuplicateEntryException e, ServletWebRequest request) {
         logger.info("Error encountered: {} Reason: {}", e.getClass(), e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(request.getRequest().getRequestURI(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);

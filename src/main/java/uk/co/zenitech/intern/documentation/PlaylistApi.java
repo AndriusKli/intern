@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import uk.co.zenitech.intern.entity.Playlist;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 public interface PlaylistApi {
@@ -16,9 +15,9 @@ public interface PlaylistApi {
     @ApiOperation(value = "Get a specific playlist", notes = "Gets a specific playlist belonging to a user.")
     ResponseEntity<Playlist> getPlaylist(@ApiParam(value = "User whose playlist you want to retrieve") Long userId,
                                          @ApiParam(value = "Playlist which you want to retrieve") Long playlistId);
-
-    @ApiOperation(value = "Create a playlist", notes = "Creates a playlist for the specified user")
-    ResponseEntity<Void> createPlaylist(@ApiParam(value = "User for whom you want to create a new playlist") Long userId) throws URISyntaxException;
+//
+//    @ApiOperation(value = "Create a playlist", notes = "Creates a playlist for the specified user")
+//    ResponseEntity<Void> createPlaylist(@ApiParam(value = "User for whom you want to create a new playlist") Long userId) throws URISyntaxException;
 
     @ApiOperation(value = "Adds a song to a playlist", notes = "The song being added must be in the database," +
             "otherwise it will fail. Will not add duplicates.")

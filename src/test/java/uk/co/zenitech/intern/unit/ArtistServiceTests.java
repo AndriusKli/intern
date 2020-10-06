@@ -8,10 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.co.zenitech.intern.entity.Artist;
+import uk.co.zenitech.intern.errorhandling.exceptions.EntityNotInDbException;
 import uk.co.zenitech.intern.service.artist.ArtistRepository;
 import uk.co.zenitech.intern.service.artist.ITunesArtistService;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,9 +44,9 @@ public class ArtistServiceTests {
     @Test
     void fetchArtistFailsUponNotFound() {
         when(artistRepository.findById(anyLong())).thenReturn(Optional.empty());
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () ->
+        EntityNotInDbException exception = assertThrows(EntityNotInDbException.class, () ->
                 ITunesArtistService.getArtist(5L));
         verify(artistRepository, never()).save(any());
-        assertEquals("No artist with the requested id found", exception.getMessage());
+        assertEquals("The requested artist with the id 5 was not found in the database.", exception.getMessage());
     }
 }

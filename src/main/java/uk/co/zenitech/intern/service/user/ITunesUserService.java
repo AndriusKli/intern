@@ -3,10 +3,10 @@ package uk.co.zenitech.intern.service.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.co.zenitech.intern.entity.User;
+import uk.co.zenitech.intern.errorhandling.exceptions.EntityNotInDbException;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ITunesUserService implements UserService {
@@ -26,7 +26,7 @@ public class ITunesUserService implements UserService {
     @Override
     public User findUser(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User with the id " + id + " was not found."));
+                .orElseThrow(() -> new EntityNotInDbException("user", id));
     }
 
     @Override
@@ -34,13 +34,13 @@ public class ITunesUserService implements UserService {
         return findUsers().stream()
                 .filter(user -> user.getUserName().toLowerCase().equals(username.toLowerCase().trim()))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("User with the username " + username + " was not found."));
+                .orElseThrow(() -> new EntityNotInDbException("user"));
     }
 
     @Override
     @Transactional
-    public void createUser(User user) {
-        userRepository.save(user);
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override

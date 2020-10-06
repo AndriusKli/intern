@@ -10,6 +10,7 @@ import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
 import uk.co.zenitech.intern.entity.Album;
 import uk.co.zenitech.intern.entity.Song;
+import uk.co.zenitech.intern.errorhandling.exceptions.EntityNotInDbException;
 import uk.co.zenitech.intern.response.ITunesResponse;
 import uk.co.zenitech.intern.serializer.ResponseParser;
 import uk.co.zenitech.intern.serializer.WrapperType;
@@ -17,7 +18,6 @@ import uk.co.zenitech.intern.service.song.SongRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ITunesAlbumService implements AlbumService {
@@ -65,7 +65,7 @@ public class ITunesAlbumService implements AlbumService {
         if (album.getSongs() == null || album.getSongs().isEmpty()) {
             logger.info("Album ID {} does not have any songs assigned to it, fetching songs from ITunes", id);
             fetchAlbumSongs(id);
-            album = albumRepository.findById(id).orElseThrow(NoSuchElementException::new);
+            album = albumRepository.findById(id).orElseThrow(() -> new EntityNotInDbException("album", id));
         }
         return album;
     }
@@ -79,7 +79,7 @@ public class ITunesAlbumService implements AlbumService {
         );
         if (albums.isEmpty()) {
             logger.warn("No album with the requested id found in ITunes: {}", id);
-            throw new NoSuchElementException("No album with the requested id found");
+            throw new EntityNotInDbException("album", id);
         } else {
             Album album = albums.get(0);
             albumRepository.saveAndFlush(album);
@@ -93,7 +93,7 @@ public class ITunesAlbumService implements AlbumService {
                 WrapperType.TRACK.getWrapper(),
                 iTunesFeignClient.getAlbumSongs(albumId)
         );
-        Album album = albumRepository.findById(albumId).orElseThrow(NoSuchElementException::new);
+        Album album = albumRepository.findById(albumId).orElseThrow(() -> new EntityNotInDbException("album", albumId));
         songs.forEach(song -> song.setAlbum(album));
         album.setSongs(songs);
         albumRepository.saveAndFlush(album);

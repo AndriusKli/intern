@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 import uk.co.zenitech.intern.entity.Playlist;
 import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.entity.User;
+import uk.co.zenitech.intern.errorhandling.exceptions.DuplicateEntryException;
+import uk.co.zenitech.intern.errorhandling.exceptions.EntityNotInDbException;
 import uk.co.zenitech.intern.service.song.SongService;
 import uk.co.zenitech.intern.service.user.UserRepository;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 
 @Service
@@ -32,27 +33,27 @@ public class ITunesPlaylistService implements PlaylistService {
     @Override
     public List<Playlist> getPlaylists(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("User with the id " + userId + " was not found."));
+                .orElseThrow(() -> new EntityNotInDbException("user", userId));
         return user.getPlaylists();
     }
 
     @Override
     public Playlist getPlaylist(Long userId, Long playlistId) {
-        User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotInDbException("user", userId));
         return user.getPlaylists()
                 .stream()
                 .filter(playlist -> playlist.getPlaylistId().equals(playlistId))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("User with the id " + userId + " was not found."));
+                .orElseThrow(() -> new EntityNotInDbException("playlist"));
     }
 
     @Override
-    public void createPlaylist(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
+    public Playlist createPlaylist(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotInDbException("user", userId));
         Playlist playlist = new Playlist();
         user.getPlaylists().add(playlist);
         playlist.setUser(user);
-        userRepository.save(user);
+        return playlistRepository.save(playlist);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class ITunesPlaylistService implements PlaylistService {
             playlistRepository.save(playlist);
         } else {
             logger.info("Song already exist in playlist (ID: {}): {}. Not adding duplicate.", playlistId, song);
-            // TODO notify the user that a duplicate song exists
+            throw new DuplicateEntryException("Song already exists in the playlist.");
         }
     }
 

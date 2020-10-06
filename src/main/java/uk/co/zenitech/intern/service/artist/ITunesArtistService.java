@@ -9,13 +9,13 @@ import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
 import uk.co.zenitech.intern.entity.Artist;
+import uk.co.zenitech.intern.errorhandling.exceptions.EntityNotInDbException;
 import uk.co.zenitech.intern.response.ITunesResponse;
 import uk.co.zenitech.intern.serializer.ResponseParser;
 import uk.co.zenitech.intern.serializer.WrapperType;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ITunesArtistService implements ArtistService {
@@ -66,7 +66,7 @@ public class ITunesArtistService implements ArtistService {
         );
         if (artists.isEmpty()) {
             logger.warn("No artist found with the requested id: {}", id);
-            throw new NoSuchElementException("No artist with the requested id found");
+            throw  new EntityNotInDbException("artist", id);
         } else {
             Artist artist = artists.get(0);
             artistRepository.save(artist);
@@ -88,14 +88,9 @@ public class ITunesArtistService implements ArtistService {
 
     @Override
     public void updateArtist(Long id, Artist artist) {
-        Artist updatableArtist = artistRepository.findById(id).orElseThrow(NoSuchElementException::new);
-        updatableArtist.setAmgArtistId(artist.getAmgArtistId());
+        Artist updatableArtist = artistRepository.findById(id).orElseThrow(() -> new EntityNotInDbException("artist", id));
         updatableArtist.setArtistId(artist.getArtistId());
         updatableArtist.setArtistName(artist.getArtistName());
         artistRepository.save(updatableArtist);
     }
-
-//     TODO: figure out what to do if an artist with that id already exists.
-//     Also, are we supposed to even update ids?
-
 }

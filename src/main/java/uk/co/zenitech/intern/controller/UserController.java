@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{userId}")
-    public ResponseEntity<User> getUser(@PathVariable Long userId ) {
+    public ResponseEntity<User> getUser(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.findUser(userId));
     }
 
@@ -39,9 +39,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody User user) throws URISyntaxException {
-        userService.createUser(user);
-        return ResponseEntity.created(new URI(user.getUserId().toString())).build();
+    public ResponseEntity<User> createUser(@RequestBody User user) throws URISyntaxException {
+        return ResponseEntity.created(new URI(user.getUserId().toString())).body(userService.createUser(user));
     }
 
     @PutMapping(value = "/{userId}")
@@ -55,6 +54,4 @@ public class UserController {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
-
-
 }

@@ -9,13 +9,13 @@ import uk.co.zenitech.intern.client.ITunesFeignClient;
 import uk.co.zenitech.intern.client.musicparams.Attribute;
 import uk.co.zenitech.intern.client.musicparams.Entity;
 import uk.co.zenitech.intern.entity.Song;
+import uk.co.zenitech.intern.errorhandling.exceptions.EntityNotInDbException;
 import uk.co.zenitech.intern.response.ITunesResponse;
 import uk.co.zenitech.intern.serializer.ResponseParser;
 import uk.co.zenitech.intern.serializer.WrapperType;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ITunesSongService implements SongService {
@@ -69,7 +69,7 @@ public class ITunesSongService implements SongService {
         );
         if (songs.isEmpty()) {
             logger.warn("No songs found with the requested id: {}", id);
-            throw new NoSuchElementException("No songs with the requested id found");
+            throw new EntityNotInDbException("song", id);
         } else {
             Song song = songs.get(0);
             songRepository.saveAndFlush(song);
@@ -92,7 +92,7 @@ public class ITunesSongService implements SongService {
     @Override
     @Transactional
     public void updateSong(Long id, Song song) {
-        Song updatableSong = songRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        Song updatableSong = songRepository.findById(id).orElseThrow(() -> new EntityNotInDbException("song", id));
         updatableSong.setAlbumName(song.getAlbumName());
         updatableSong.setArtistName(song.getArtistName());
         updatableSong.setSongId(song.getSongId());
