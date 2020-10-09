@@ -40,4 +40,3 @@ build/
 .mvn
 /src/main/java/uk/co/zenitech/intern/client/ITunesClient.java
 /src/main/java/uk/co/zenitech/intern/errorhandling/ITunesErrorHandler.java
-/src/test/java/uk/co/zenitech/intern/TestTests.java

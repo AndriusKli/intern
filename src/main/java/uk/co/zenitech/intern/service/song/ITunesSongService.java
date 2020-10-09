@@ -97,6 +97,7 @@ public class ITunesSongService implements SongService {
         updatableSong.setArtistName(song.getArtistName());
         updatableSong.setSongId(song.getSongId());
         updatableSong.setSongName(song.getSongName());
+        updatableSong.setAlbumCover(song.getAlbumCover());
         songRepository.save(updatableSong);
     }
 }

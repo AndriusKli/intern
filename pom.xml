@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>uk.co.zenitech</groupId>
 	<artifactId>intern</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.7.5-SNAPSHOT</version>
 	<name>intern dev project</name>
-	<description>A project fot intern devs</description>
+	<description>A project for intern devs</description>
 
 	<properties>
 		<java.version>11</java.version>

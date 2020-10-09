@@ -39,6 +39,9 @@ public class Song {
 
     private String artistName;
 
+    @JsonProperty(value = "artworkUrl100")
+    private String albumCover;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "albumId")
     @JsonIgnore
