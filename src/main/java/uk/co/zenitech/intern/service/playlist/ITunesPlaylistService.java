@@ -11,6 +11,7 @@ import uk.co.zenitech.intern.errorhandling.exceptions.DuplicateEntryException;
 import uk.co.zenitech.intern.errorhandling.exceptions.EntityNotInDbException;
 import uk.co.zenitech.intern.service.song.SongService;
 import uk.co.zenitech.intern.service.user.UserRepository;
+import uk.co.zenitech.intern.service.user.UserService;
 
 import java.util.List;
 
@@ -21,25 +22,26 @@ public class ITunesPlaylistService implements PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final UserRepository userRepository;
     private final SongService songService;
+    private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(ITunesPlaylistService.class);
 
     @Autowired
-    public ITunesPlaylistService(PlaylistRepository playlistRepository, UserRepository userRepository, SongService songService) {
+    public ITunesPlaylistService(PlaylistRepository playlistRepository, UserRepository userRepository, SongService songService, UserService userService) {
         this.playlistRepository = playlistRepository;
         this.userRepository = userRepository;
         this.songService = songService;
+        this.userService = userService;
     }
 
     @Override
     public List<Playlist> getPlaylists(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotInDbException("user", userId));
+        User user = userService.findUser(userId);
         return user.getPlaylists();
     }
 
     @Override
     public Playlist getPlaylist(Long userId, Long playlistId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotInDbException("user", userId));
+        User user = userService.findUser(userId);
         return user.getPlaylists()
                 .stream()
                 .filter(playlist -> playlist.getPlaylistId().equals(playlistId))
@@ -48,12 +50,20 @@ public class ITunesPlaylistService implements PlaylistService {
     }
 
     @Override
-    public Playlist createPlaylist(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotInDbException("user", userId));
-        Playlist playlist = new Playlist();
-        user.getPlaylists().add(playlist);
-        playlist.setUser(user);
-        return playlistRepository.save(playlist);
+    public Playlist createPlaylist(Long userId, Playlist playlist) {
+        User user = userService.findUser(userId);
+        Playlist playlistToCreate = new Playlist(playlist.getPlaylistName());
+        user.getPlaylists().add(playlistToCreate);
+        playlistToCreate.setUser(user);
+        return playlistRepository.save(playlistToCreate);
+    }
+
+    @Override
+    public Playlist updatePlaylist(Playlist playlist) {
+        Playlist playlistToUpdate = playlistRepository
+                .findById(playlist.getPlaylistId()).orElseThrow(() -> new EntityNotInDbException("playlist"));
+        playlistToUpdate.setPlaylistName(playlist.getPlaylistName());
+        return playlistRepository.save(playlistToUpdate);
     }
 
     @Override

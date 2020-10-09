@@ -36,8 +36,15 @@ public class PlaylistController implements PlaylistApi {
     }
 
     @PostMapping
-    public ResponseEntity<Playlist> createPlaylist(@PathVariable Long userId) throws URISyntaxException {
-        return ResponseEntity.created(new URI(userId.toString())).body(playlistService.createPlaylist(userId));
+    public ResponseEntity<Playlist> createPlaylist(@PathVariable Long userId,
+                                                   @RequestBody Playlist playlist) throws URISyntaxException {
+        return ResponseEntity.created(new URI(userId.toString())).body(playlistService.createPlaylist(userId, playlist));
+    }
+
+    @PutMapping
+    public ResponseEntity<Playlist> updatePlaylist(@PathVariable Long userId,
+                                               @RequestBody Playlist playlist) {
+        return ResponseEntity.ok(playlistService.updatePlaylist(playlist));
     }
 
     // TODO change to Post mapping, and pass the song via body instead of params.

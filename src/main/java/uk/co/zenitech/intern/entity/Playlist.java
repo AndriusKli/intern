@@ -14,9 +14,15 @@ import java.util.List;
 @AllArgsConstructor
 public class Playlist {
 
+    public Playlist(String playlistName) {
+        this.playlistName = playlistName;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long playlistId;
+
+    private String playlistName;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

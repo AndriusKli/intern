@@ -10,8 +10,8 @@ import java.util.List;
 public interface AlbumApi {
 
     @ApiOperation(value = "Retrieves a list of up to 200 albums whose names contain the provided parameter", notes = "Case insensitive")
-    ResponseEntity<List<Album>> getAlbumsByName(@ApiParam String searchTerm,
-                                                @ApiParam(value = "Min 1 , Max 200") Long limit);
+    ResponseEntity<List<Album>> getAlbumsByName(@ApiParam(example = "thunder") String searchTerm,
+                                                @ApiParam(value = "Min 1 , Max 200", example = "5") Long limit);
 
     @ApiOperation(value = "Retrieves the specified album by id, along with all songs belonging it", notes = "The response will" +
             "also contain an array of songs that belong to this album.")
