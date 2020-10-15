@@ -47,7 +47,7 @@ public class ITunesSongService implements SongService {
         return songs;
     }
 
-    private ResponseEntity<ITunesResponse> fetchSongData(String songName, Long limit) {
+    private ITunesResponse fetchSongData(String songName, Long limit) {
         return iTunesFeignClient.getResults(
                 songName,
                 Entity.MUSIC_TRACK.getValue(),

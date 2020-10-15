@@ -15,16 +15,16 @@ import javax.validation.constraints.Min;
 @Validated
 public interface ITunesFeignClient {
 
-    @GetMapping(value = "search?term={searchTerm}&entity={entity}&attribute={attribute}&limit=200", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ITunesResponse> getResults(@RequestParam String searchTerm,
+    @GetMapping(value = "search?term={searchTerm}&entity={entity}&attribute={attribute}&limit=200", produces = MediaType.APPLICATION_JSON_VALUE)
+    ITunesResponse getResults(@RequestParam String searchTerm,
                                       @RequestParam String entity,
                                       @RequestParam String attribute,
                                       @RequestParam(required = false) @Min(1) @Max(200) Long limit
     );
 
-    @GetMapping(value = "lookup?id={id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ITunesResponse> getById(@RequestParam Long id);
+    @GetMapping(value = "lookup?id={id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ITunesResponse getById(@RequestParam Long id);
 
-    @GetMapping(value = "lookup?id={id}&entity=song", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ITunesResponse> getAlbumSongs(@RequestParam Long id);
+    @GetMapping(value = "lookup?id={id}&entity=song", produces = MediaType.APPLICATION_JSON_VALUE)
+    ITunesResponse getAlbumSongs(@RequestParam Long id);
 }

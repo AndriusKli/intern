@@ -19,8 +19,8 @@ public class ResponseParser {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(ResponseParser.class);
 
-    public <T> List<T> parse(Class<T> clazz, String wrapperType, ResponseEntity<ITunesResponse> responseEntity) {
-        return getResults(responseEntity)
+    public <T> List<T> parse(Class<T> clazz, String wrapperType, ITunesResponse responseEntity) {
+        return responseEntity.getResults()
                 .stream()
                 .filter(entry -> entry.get("wrapperType").asText().equals(wrapperType))
                 .map(entry -> getClazz(entry, clazz) )
@@ -35,8 +35,8 @@ public class ResponseParser {
             throw new ParsingException("Error parsing jsonNode");
         }
     }
-
-    private List<JsonNode> getResults(ResponseEntity<ITunesResponse> responseEntity) {
-        return responseEntity.getBody() != null ? responseEntity.getBody().getResults() : new ArrayList<>();
-    }
+//
+//    private List<JsonNode> getResults(ITunesResponse responseEntity) {
+//        return responseEntity.getBody() != null ? responseEntity.getBody().getResults() : new ArrayList<>();
+//    }
 }

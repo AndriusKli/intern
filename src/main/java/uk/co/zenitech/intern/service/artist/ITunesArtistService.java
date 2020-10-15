@@ -44,7 +44,7 @@ public class ITunesArtistService implements ArtistService {
         return artists;
     }
 
-    private ResponseEntity<ITunesResponse> fetchArtistData(String artistName, Long limit) {
+    private ITunesResponse fetchArtistData(String artistName, Long limit) {
         return iTunesFeignClient.getResults(
                 artistName,
                 Entity.MUSIC_ARTIST.getValue(),

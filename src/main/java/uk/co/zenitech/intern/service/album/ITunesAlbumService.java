@@ -48,7 +48,7 @@ public class ITunesAlbumService implements AlbumService {
         return albums;
     }
 
-    private ResponseEntity<ITunesResponse> fetchAlbumData(String album, Long limit) {
+    private ITunesResponse fetchAlbumData(String album, Long limit) {
         return iTunesFeignClient.getResults(
                 album,
                 Entity.ALBUM.getValue(),
