@@ -15,15 +15,20 @@ import java.util.List;
 @Table(name = "itunes_user")
 public class User {
 
-    public User(Long userId, String userName) {
-        this.userId = userId;
+    public User(Long uid, String userName) {
+        this.uid = uid;
         this.userName = userName;
     }
 
+    public User(Long uid, String userName, String email) {
+        this.uid = uid;
+        this.userName = userName;
+        this.email = email;
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private Long userId;
+    private Long uid;
 
     private String userName;
 
@@ -36,7 +41,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
+                "userId=" + uid +
                 ", userName='" + userName + '\'' +
                 ", email='" + email + '\'' +
                 '}';

@@ -30,11 +30,12 @@ public class Playlist {
     private User user;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-//    @JsonIgnore
     @JoinTable(
             name = "playlistSongs",
             joinColumns = @JoinColumn(name = "playlistId"),
             inverseJoinColumns = @JoinColumn(name = "songId")
     )
     private List<Song> songs;
+
+
 }

@@ -8,13 +8,11 @@ import uk.co.zenitech.intern.documentation.PlaylistApi;
 import uk.co.zenitech.intern.entity.Playlist;
 import uk.co.zenitech.intern.service.playlist.PlaylistService;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "api/users/{userId}/playlists")
-@Api("api/users/{userId}/playlists")
+@RequestMapping(value = "api/users/{accessToken}/playlists")
+@Api("api/users/{accessToken}/playlists")
 public class PlaylistController implements PlaylistApi {
 
     private final PlaylistService playlistService;
@@ -25,43 +23,42 @@ public class PlaylistController implements PlaylistApi {
     }
 
     @GetMapping
-    public ResponseEntity<List<Playlist>> getPlaylists(@PathVariable Long userId) {
-        return ResponseEntity.ok(playlistService.getPlaylists(userId));
+    public ResponseEntity<List<Playlist>> getPlaylists(@PathVariable String accessToken) {
+        return ResponseEntity.ok(playlistService.getPlaylists(accessToken));
     }
 
     @GetMapping("/{playlistId}")
-    public ResponseEntity<Playlist> getPlaylist(@PathVariable Long userId,
-                                         @PathVariable Long playlistId) {
-        return ResponseEntity.ok(playlistService.getPlaylist(userId, playlistId));
+    public ResponseEntity<Playlist> getPlaylist(@PathVariable String accessToken,
+                                                @PathVariable Long playlistId) {
+        return ResponseEntity.ok(playlistService.getPlaylist(accessToken, playlistId));
     }
 
     @PostMapping
-    public ResponseEntity<Playlist> createPlaylist(@PathVariable Long userId,
-                                                   @RequestBody Playlist playlist) throws URISyntaxException {
-        return ResponseEntity.created(new URI(userId.toString())).body(playlistService.createPlaylist(userId, playlist));
+    public ResponseEntity<Playlist> createPlaylist(@PathVariable String accessToken,
+                                                   @RequestBody Playlist playlist) {
+        return ResponseEntity.ok(playlistService.createPlaylist(accessToken, playlist));
     }
 
     @PutMapping
-    public ResponseEntity<Playlist> updatePlaylist(@PathVariable Long userId,
-                                               @RequestBody Playlist playlist) {
-        return ResponseEntity.ok(playlistService.updatePlaylist(playlist));
+    public ResponseEntity<Playlist> updatePlaylist(@PathVariable String accessToken,
+                                                   @RequestBody Playlist playlist) {
+        return ResponseEntity.ok(playlistService.updatePlaylist(accessToken, playlist));
     }
 
-    // TODO change to Post mapping, and pass the song via body instead of params.
-    // Ask Zilvinas
-    @PutMapping("/{playlistId}")
-    public ResponseEntity<Void> addSongToPlaylist(@PathVariable Long userId,
-                                           @PathVariable Long playlistId,
-                                           @RequestParam Long songId) {
-        playlistService.addSong(userId, playlistId, songId);
+    // TODO Maybe pass the song via body instead of params.
+    @PostMapping("/{playlistId}")
+    public ResponseEntity<Void> addSongToPlaylist(@PathVariable String accessToken,
+                                                  @PathVariable Long playlistId,
+                                                  @RequestParam Long songId) {
+        playlistService.addSong(accessToken, playlistId, songId);
         return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping("/{playlistId}")
-    public ResponseEntity<Void> removeSongFromPlaylist(@PathVariable Long userId,
-                                                @PathVariable Long playlistId,
-                                                @RequestParam Long songId) {
-        playlistService.removeSong(userId, playlistId, songId);
+    public ResponseEntity<Void> removeSongFromPlaylist(@PathVariable String accessToken,
+                                                       @PathVariable Long playlistId,
+                                                       @RequestParam Long songId) {
+        playlistService.removeSong(accessToken, playlistId, songId);
         return ResponseEntity.noContent().build();
     }
 }

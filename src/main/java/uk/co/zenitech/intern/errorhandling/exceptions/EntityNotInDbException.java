@@ -5,6 +5,10 @@ public class EntityNotInDbException extends RuntimeException {
         super("The requested " + entity + " with the id " + id.toString() + " was not found in the database.");
     }
 
+    public EntityNotInDbException(String entity, String id) {
+        super("The requested " + entity + " with the id " + id + " was not found in the database.");
+    }
+
     public EntityNotInDbException(String entity) {
         super("No " + entity + " found in the database.");
     }

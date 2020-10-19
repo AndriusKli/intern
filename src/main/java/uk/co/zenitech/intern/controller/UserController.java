@@ -38,9 +38,10 @@ public class UserController {
         return ResponseEntity.ok(userService.findUserByUsername(username));
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) throws URISyntaxException {
-        return ResponseEntity.created(new URI(user.getUserId().toString())).body(userService.createUser(user));
+    @PostMapping(value = "/{accessToken}")
+    public ResponseEntity<User> createUser(@PathVariable String accessToken,
+                                           @RequestBody User user) throws URISyntaxException {
+        return ResponseEntity.created(new URI(user.getUid().toString())).body(userService.createUser(accessToken, user));
     }
 
     @PutMapping(value = "/{userId}")

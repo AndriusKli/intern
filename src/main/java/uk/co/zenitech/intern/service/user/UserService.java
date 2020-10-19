@@ -8,7 +8,7 @@ public interface UserService {
     List<User> findUsers();
     User findUser(Long id);
     User findUserByUsername(String username);
-    User createUser(User user);
+    User createUser(String accessToken, User user);
     void updateUser(Long id, User user);
     void deleteUser(Long id);
 }

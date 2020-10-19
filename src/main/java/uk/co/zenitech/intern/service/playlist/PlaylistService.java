@@ -5,10 +5,10 @@ import uk.co.zenitech.intern.entity.Playlist;
 import java.util.List;
 
 public interface PlaylistService {
-    List<Playlist> getPlaylists(Long userId);
-    Playlist getPlaylist(Long userId, Long playlistId);
-    Playlist createPlaylist(Long userId, Playlist playlist);
-    Playlist updatePlaylist(Playlist playlist);
-    void addSong(Long userId, Long playlistId, Long songId);
-    void removeSong(Long userId, Long playlistId, Long songId);
+    List<Playlist> getPlaylists(String accessToken);
+    Playlist getPlaylist(String accessToken, Long playlistId);
+    Playlist createPlaylist(String accessToken, Playlist playlist);
+    Playlist updatePlaylist(String accessToken, Playlist playlist);
+    void addSong(String accessToken, Long playlistId, Long songId);
+    void removeSong(String accessToken, Long playlistId, Long songId);
 }

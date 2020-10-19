@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.co.zenitech.intern.entity.User;
 import uk.co.zenitech.intern.errorhandling.exceptions.DuplicateEntryException;
 import uk.co.zenitech.intern.errorhandling.exceptions.EntityNotInDbException;
-import uk.co.zenitech.intern.service.song.SongService;
+import uk.co.zenitech.intern.service.authentication.AuthService;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -18,10 +18,12 @@ public class ITunesUserService implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(ITunesUserService.class);
     private final UserRepository userRepository;
+    private final AuthService authService;
 
     @Autowired
-    public ITunesUserService(UserRepository userRepository) {
+    public ITunesUserService(UserRepository userRepository, AuthService authService) {
         this.userRepository = userRepository;
+        this.authService = authService;
     }
 
     @Override
@@ -45,16 +47,17 @@ public class ITunesUserService implements UserService {
 
     @Override
     @Transactional
-    public User createUser(User user) {
+    public User createUser(String accessToken, User user) {
+        Long uid = authService.retrieveUid(accessToken);
         Optional<User> existingUser = userRepository.findAll().stream()
-                .filter(dbUser -> dbUser.getEmail().equals(user.getEmail()) || dbUser.getUserName().equals(user.getUserName()))
+                .filter(dbUser -> dbUser.getEmail().equals(user.getEmail()) || dbUser.getUserName().equals(user.getUserName()) || dbUser.getUid().equals(uid))
                 .findFirst();
         if (existingUser.isEmpty()) {
             logger.info("Creating new user: {}", user);
-            return userRepository.save(user);
+            return userRepository.save(new User(uid, user.getUserName(), user.getEmail()));
         } else {
-            logger.info("User with the provided email or username already exists: {}", user);
-            throw new DuplicateEntryException("User with the provided email or username already exists.");
+            logger.info("User with the provided email, username or id already exists: {}", user);
+            throw new DuplicateEntryException("User with the provided email, username or id already exists.");
         }
     }
 

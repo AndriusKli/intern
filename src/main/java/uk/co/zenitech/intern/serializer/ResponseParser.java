@@ -3,14 +3,13 @@ package uk.co.zenitech.intern.serializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import uk.co.zenitech.intern.errorhandling.exceptions.ParsingException;
 import uk.co.zenitech.intern.response.ITunesResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +34,16 @@ public class ResponseParser {
             throw new ParsingException("Error parsing jsonNode");
         }
     }
-//
-//    private List<JsonNode> getResults(ITunesResponse responseEntity) {
-//        return responseEntity.getBody() != null ? responseEntity.getBody().getResults() : new ArrayList<>();
-//    }
+
+    public Long extractSubjectId(Response userInfo) {
+        try {
+            String tokenBody = userInfo.body().toString();
+            String subject = objectMapper.readTree(tokenBody).get("sub").asText();
+            // Yes, this is a horrible solution, but I don't have the time to replace everything from long to string everywhere now.
+            return Long.parseLong(subject.substring(subject.indexOf("|") + 1).substring(0, 16));
+        } catch (JsonProcessingException e) {
+            logger.info("Error processing retrieved userInfo");
+            throw new ParsingException("Error parsing retrieved userInfo");
+        }
+    }
 }

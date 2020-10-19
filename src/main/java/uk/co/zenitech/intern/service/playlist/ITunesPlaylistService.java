@@ -9,49 +9,59 @@ import uk.co.zenitech.intern.entity.Song;
 import uk.co.zenitech.intern.entity.User;
 import uk.co.zenitech.intern.errorhandling.exceptions.DuplicateEntryException;
 import uk.co.zenitech.intern.errorhandling.exceptions.EntityNotInDbException;
+import uk.co.zenitech.intern.errorhandling.exceptions.ForbiddenException;
+import uk.co.zenitech.intern.service.authentication.AuthService;
 import uk.co.zenitech.intern.service.song.SongService;
 import uk.co.zenitech.intern.service.user.UserRepository;
 import uk.co.zenitech.intern.service.user.UserService;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
 public class ITunesPlaylistService implements PlaylistService {
 
     private final PlaylistRepository playlistRepository;
-    private final UserRepository userRepository;
     private final SongService songService;
     private final UserService userService;
+    private final AuthService authService;
     private static final Logger logger = LoggerFactory.getLogger(ITunesPlaylistService.class);
 
     @Autowired
-    public ITunesPlaylistService(PlaylistRepository playlistRepository, UserRepository userRepository, SongService songService, UserService userService) {
+    public ITunesPlaylistService(PlaylistRepository playlistRepository, UserRepository userRepository, SongService songService, UserService userService, AuthService authService) {
         this.playlistRepository = playlistRepository;
-        this.userRepository = userRepository;
         this.songService = songService;
         this.userService = userService;
+        this.authService = authService;
     }
 
     @Override
-    public List<Playlist> getPlaylists(Long userId) {
-        User user = userService.findUser(userId);
-        return user.getPlaylists();
+    public List<Playlist> getPlaylists(String accessToken) {
+        Long uid = authService.retrieveUid(accessToken);
+        return playlistRepository.findAll().stream()
+                .filter(playlist -> playlist.getUser().getUid().equals(uid))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Playlist getPlaylist(Long userId, Long playlistId) {
-        User user = userService.findUser(userId);
-        return user.getPlaylists()
-                .stream()
-                .filter(playlist -> playlist.getPlaylistId().equals(playlistId))
-                .findFirst()
+    @Transactional
+    public Playlist getPlaylist(String accessToken, Long playlistId) {
+        Long uid = authService.retrieveUid(accessToken);
+        Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new EntityNotInDbException("playlist"));
+        if (playlist.getUser().getUid().equals(uid)) {
+            return playlist;
+        } else {
+            throw new ForbiddenException("Unauthorized to perform requested action on playlist.");
+        }
     }
 
     @Override
-    public Playlist createPlaylist(Long userId, Playlist playlist) {
-        User user = userService.findUser(userId);
+    public Playlist createPlaylist(String accessToken, Playlist playlist) {
+        Long uid = authService.retrieveUid(accessToken);
+        User user = userService.findUser(uid);
         Playlist playlistToCreate = new Playlist(playlist.getPlaylistName());
         user.getPlaylists().add(playlistToCreate);
         playlistToCreate.setUser(user);
@@ -59,19 +69,24 @@ public class ITunesPlaylistService implements PlaylistService {
     }
 
     @Override
-    public Playlist updatePlaylist(Playlist playlist) {
+    public Playlist updatePlaylist(String accessToken, Playlist playlist) {
+        Long uid = authService.retrieveUid(accessToken);
         Playlist playlistToUpdate = playlistRepository
                 .findById(playlist.getPlaylistId()).orElseThrow(() -> new EntityNotInDbException("playlist"));
-        playlistToUpdate.setPlaylistName(playlist.getPlaylistName());
-        return playlistRepository.save(playlistToUpdate);
+        if (playlistToUpdate.getUser().getUid().equals(uid)) {
+            playlistToUpdate.setPlaylistName(playlist.getPlaylistName());
+            return playlistRepository.save(playlistToUpdate);
+        } else {
+            throw new ForbiddenException("Unauthorized to perform requested action on playlist.");
+        }
     }
 
     @Override
-    public void addSong(Long userId, Long playlistId, Long songId) {
-        Playlist playlist = getPlaylist(userId, playlistId);
+    public void addSong(String accessToken, Long playlistId, Long songId) {
+        Playlist playlist = getPlaylist(accessToken, playlistId);
         Song song = songService.getSong(songId);
         if (!playlist.getSongs().contains(song)) {
-            logger.info("Adding song {} to user's (ID: {}) playlist (ID: {})", song, userId, playlistId);
+            logger.info("Adding song {} to user's (ID: {}) playlist (ID: {})", song, accessToken, playlistId);
             playlist.getSongs().add(song);
             playlistRepository.save(playlist);
         } else {
@@ -81,10 +96,10 @@ public class ITunesPlaylistService implements PlaylistService {
     }
 
     @Override
-    public void removeSong(Long userId, Long playlistId, Long songId) {
-        Playlist playlist = getPlaylist(userId, playlistId);
+    public void removeSong(String accessToken, Long playlistId, Long songId) {
+        Playlist playlist = getPlaylist(accessToken, playlistId);
         Song song = songService.getSong(songId);
-        logger.info("Removing song {} from user's (ID: {}) playlist (ID: {})", song, userId, playlistId);
+        logger.info("Removing song {} from user's (ID: {}) playlist (ID: {})", song, accessToken, playlistId);
         playlist.getSongs().remove(song);
         playlistRepository.save(playlist);
     }
